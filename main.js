@@ -5,17 +5,27 @@ cvs.height = 400;
 const ctx = cvs.getContext("2d");
 
 // Images
-imageArrierePlan.src = "./images/arrierePlan.png";
-imageAvantPlan.src = "./images/avantPlan.png";
-imageTuyauBas.src = "./images/tuyauBas.png";
-imageTuyauHaut.src = "./images/tuyauHaut.png";
-imageOiseau1.src = "./images/oiseau1.png";
-imageOiseau2.src = "./images/oiseau2.png";
+const imageArrierePlan = new Image();
+imageArrierePlan.src = "images/arrierePlan.png";
+const imageAvantPlan = new Image();
+imageAvantPlan.src = "images/avantPlan.png";
+const imageTuyauBas = new Image();
+imageTuyauBas.src = "images/tuyauBas.png";
+const imageTuyauHaut = new Image();
+imageTuyauHaut.src = "images/tuyauHaut.png";
+const imageOiseau1 = new Image();
+imageOiseau1.src = "images/oiseau1.png";
+const imageOiseau2 = new Image();
+imageOiseau2.src = "images/oiseau2.png";
 
-// Sons
-sonVole.src = "./sons/sonVole.mp3";
-sonScore.src = "./sons/sonScore.mp3";
-sonChoc.src = "./sons/sonChoc.mp3";
+// sons
+
+const sonVole = new Audio();
+sonVole.src = "sons/sonVole.mp3";
+const sonScore = new Audio();
+sonScore.src = "sons/sonScore.mp3";
+const sonChoc = new Audio();
+sonChoc.src = "sons/sonChoc.mp3";
 
 
 // Paramètres des tuyaux
