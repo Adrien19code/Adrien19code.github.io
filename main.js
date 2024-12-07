@@ -5,6 +5,7 @@ cvs.height = 400;
 const ctx = cvs.getContext("2d");
 
 // Images
+
 const imageArrierePlan = new Image();
 imageArrierePlan.src = "images/arrierePlan.png";
 const imageAvantPlan = new Image();
@@ -19,13 +20,13 @@ const imageOiseau2 = new Image();
 imageOiseau2.src = "images/oiseau2.png";
 
 // sons
+
 const sonVole = new Audio();
 sonVole.src = "sons/sonVole.mp3";
 const sonScore = new Audio();
 sonScore.src = "sons/sonScore.mp3";
 const sonChoc = new Audio();
 sonChoc.src = "sons/sonChoc.mp3";
-
 
 // Paramètres des tuyaux
 const largeurTuyau = 40;
@@ -48,24 +49,9 @@ const hauteurOiseau = 24;
 let finDuJeu = false;
 let score = 0;
 
-// Contrôle de l'état de la touche espace
-let toucheEspaceEnfoncee = false;
+let espaceAppuye = false; // Variable pour vérifier si la barre d'espace est enfoncée
 
-// Utilisation de la barre d'espace pour faire monter l'oiseau
-document.addEventListener("keydown", function(event) {
-    if (event.code === "Space" && !toucheEspaceEnfoncee) { // Vérifie si la touche pressée est "Space"
-        toucheEspaceEnfoncee = true;  // Empêche un double saut avant que la touche soit relâchée
-        monte();
-    }
-});
-
-// Lorsque la touche est relâchée, on permet à l'oiseau de sauter à nouveau
-document.addEventListener("keyup", function(event) {
-    if (event.code === "Space") {
-        toucheEspaceEnfoncee = false;  // La touche est maintenant relâchée, donc on peut sauter à nouveau
-    }
-});
-
+// Fonction pour faire sauter l'oiseau
 function monte() {
     if (finDuJeu === false) {
         oiseauMonte = 10;
@@ -76,13 +62,37 @@ function monte() {
     }
 }
 
-// Utilisation du clic droit pour faire monter l'oiseau
-document.addEventListener("contextmenu", function(event) {
-    event.preventDefault(); // Empêche l'ouverture du menu contextuel
-    monte();
+// Pour l'ordinateur, utiliser la barre d'espace
+document.addEventListener("keydown", function(event) {
+    if (event.code === "Space" && !espaceAppuye) { // Vérifie si la touche est "Space" et si elle n'est pas déjà enfoncée
+        espaceAppuye = true;
+        monte();
+    }
 });
 
-function rechargeLejeu() {
+// Quand la barre d'espace est relâchée, permettre à l'utilisateur de sauter à nouveau
+document.addEventListener("keyup", function(event) {
+    if (event.code === "Space") {
+        espaceAppuye = false;
+    }
+});
+
+// Pour le mobile, utiliser les événements tactiles
+let touchStart = false;
+cvs.addEventListener("touchstart", function(event) {
+    if (!touchStart && finDuJeu === false) { // Vérifie si l'écran n'est pas déjà touché
+        touchStart = true;
+        monte();
+    }
+});
+
+// Quand le toucher est terminé, permettre au jeu de continuer
+cvs.addEventListener("touchend", function(event) {
+    touchStart = false;
+});
+
+// Fonction pour recharger le jeu après la fin
+function rechargeLejeu(){
     finDuJeu = false;
     location.reload();
 }
@@ -109,12 +119,13 @@ function dessine() {
         else if (tabTuyaux[i].x + largeurTuyau < 0){
             tabTuyaux.splice(i, 1);
         }
-        // Gestion des collisions
+        // Gestion des colisions
         if(yOiseau < 0 || yOiseau + hauteurOiseau > 300 ||(xOiseau + largeurOiseau >= tabTuyaux [i].x && xOiseau<= tabTuyaux[i].x + largeurTuyau
         && (yOiseau + hauteurOiseau >= tabTuyaux[i].y || yOiseau + ecartTuyaux <= tabTuyaux[i].y ))){
-            sonChoc.play();
+               sonChoc.play();
+            
             finDuJeu = true;
-        }
+            }
         // Gestion du score
         if(xOiseau === tabTuyaux[i].x + largeurTuyau + 5){
             score++;
@@ -147,9 +158,8 @@ function dessine() {
         ctx.font = "30px Verdana";
         ctx.fillText("Fin de partie", 50, 200);
         ctx.font = "20px Verdana";
-        ctx.fillText("cliquer pour recommencer", 15, 230);
+        ctx.fillText("Cliquer pour recommencer", 15, 230);
     }
 }
 
 dessine();
-
