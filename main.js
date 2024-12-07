@@ -18,14 +18,13 @@ imageOiseau1.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/m
 const imageOiseau2 = new Image();
 imageOiseau2.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/images/oiseau2.png"; // URL pour l'image du second oiseau
 
-// sons
-
+// Sons
 const sonVole = new Audio();
-sonVole.src = "sons/sonVole.mp3";
+sonVole.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/sons/sonVole.mp3"; // URL pour le son de vol
 const sonScore = new Audio();
-sonScore.src = "sons/sonScore.mp3";
+sonScore.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/sons/sonScore.mp3"; // URL pour le son de score
 const sonChoc = new Audio();
-sonChoc.src = "sons/sonChoc.mp3";
+sonChoc.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/sons/sonChoc.mp3"; // URL pour le son de choc
 
 
 // Paramètres des tuyaux
