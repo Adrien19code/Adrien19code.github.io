@@ -6,17 +6,17 @@ const ctx = cvs.getContext("2d");
 
 // Images
 const imageArrierePlan = new Image();
-imageArrierePlan.src = "images/arrierePlan.png";
+imageArrierePlan.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/images/arrierePlan.png"; // URL pour l'arrière-plan
 const imageAvantPlan = new Image();
-imageAvantPlan.src = "images/avantPlan.png";
+imageAvantPlan.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/images/avantPlan.png"; // URL pour l'avant-plan
 const imageTuyauBas = new Image();
-imageTuyauBas.src = "images/tuyauBas.png";
+imageTuyauBas.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/images/tuyauBas.png"; // URL pour le tuyau bas
 const imageTuyauHaut = new Image();
-imageTuyauHaut.src = "images/tuyauHaut.png";
+imageTuyauHaut.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/images/tuyauHaut.png"; // URL pour le tuyau haut
 const imageOiseau1 = new Image();
-imageOiseau1.src = "images/oiseau1.png";
+imageOiseau1.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/images/oiseau1.png"; // URL pour l'image du premier oiseau
 const imageOiseau2 = new Image();
-imageOiseau2.src = "images/oiseau2.png";
+imageOiseau2.src = "https://github.com/Adrien19code/Adrien19code.github.io/raw/main/images/oiseau2.png"; // URL pour l'image du second oiseau
 
 // sons
 
