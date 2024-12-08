@@ -19,12 +19,21 @@ const imageOiseau2 = new Image();
 imageOiseau2.src = "images/oiseau2.png";
 
 // Sons
-const sonVole = new Audio();
-sonVole.src = "sons/sonVole.mp3";
-const sonScore = new Audio();
-sonScore.src = "sons/sonScore.mp3";
-const sonChoc = new Audio();
-sonChoc.src = "sons/sonChoc.mp3";
+const sonVole = new Audio("sons/sonVole.mp3");
+const sonScore = new Audio("sons/sonScore.mp3");
+const sonChoc = new Audio("sons/sonChoc.mp3");
+
+// Activation des sons uniquement après une interaction utilisateur (nécessaire pour certains navigateurs)
+let sonsPrets = false;
+
+document.addEventListener("click", () => {
+    if (!sonsPrets) {
+        sonVole.play().catch(() => {}); // Lance une lecture silencieuse pour initialiser les sons
+        sonScore.play().catch(() => {});
+        sonChoc.play().catch(() => {});
+        sonsPrets = true;
+    }
+});
 
 // Paramètres des tuyaux
 const largeurTuyau = 40;
@@ -77,10 +86,10 @@ cvs.addEventListener("touchend", function(event) {
 
 // Fonction pour faire monter l'oiseau
 function monte() {
-    if (finDuJeu === false) {
+    if (!finDuJeu) {
         oiseauMonte = 10;
         yOiseau -= 25;
-        sonVole.play();
+        sonVole.play().catch(() => console.error("Erreur lors de la lecture du son 'sonVole.mp3'"));
     } else {
         setTimeout(rechargeLejeu, 500);
     }
@@ -118,14 +127,14 @@ function dessine() {
         // Gestion des collisions
         if (yOiseau < 0 || yOiseau + hauteurOiseau > 300 || (xOiseau + largeurOiseau >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau
             && (yOiseau + hauteurOiseau >= tabTuyaux[i].y || yOiseau + ecartTuyaux <= tabTuyaux[i].y))) {
-            sonChoc.play();
+            sonChoc.play().catch(() => console.error("Erreur lors de la lecture du son 'sonChoc.mp3'"));
             finDuJeu = true;
         }
 
         // Gestion du score
         if (xOiseau === tabTuyaux[i].x + largeurTuyau + 5) {
             score++;
-            sonScore.play();
+            sonScore.play().catch(() => console.error("Erreur lors de la lecture du son 'sonScore.mp3'"));
         }
     }
 
@@ -147,7 +156,7 @@ function dessine() {
     ctx.font = "20px Verdana";
     ctx.fillText("Score :" + score, 10, cvs.height - 20);
 
-    if (finDuJeu === false) {
+    if (!finDuJeu) {
         requestAnimationFrame(dessine);
     } else {
         ctx.fillStyle = "black";
@@ -160,10 +169,11 @@ function dessine() {
 
 // Écouteur d'événement pour recommencer le jeu après la fin
 cvs.addEventListener("click", function() {
-    if (finDuJeu === true) {
+    if (finDuJeu) {
         rechargeLejeu();
     }
 });
 
 // Lancement du jeu
 dessine();
+
