@@ -1,7 +1,21 @@
 // Contexte graphique
 const cvs = document.getElementById("zone_de_dessin");
-cvs.width = 300;
-cvs.height = 400;
+
+// Ajustement de la taille pour les appareils mobiles
+function ajusterTailleCanvas() {
+    if (window.innerWidth < 768) { // Seuil pour appareils mobiles
+        cvs.width = window.innerWidth * 0.9; // 90% de la largeur de l'écran
+        cvs.height = window.innerHeight * 0.7; // 70% de la hauteur de l'écran
+    } else {
+        cvs.width = 300;
+        cvs.height = 400;
+    }
+}
+
+// Appeler la fonction au chargement de la page et lors du redimensionnement
+ajusterTailleCanvas();
+window.addEventListener("resize", ajusterTailleCanvas);
+
 const ctx = cvs.getContext("2d");
 
 // Images
@@ -103,21 +117,21 @@ function rechargeLejeu() {
 
 // Dessin du jeu
 function dessine() {
-    ctx.drawImage(imageArrierePlan, 0, 0);
+    ctx.drawImage(imageArrierePlan, 0, 0, cvs.width, cvs.height);
 
     // Gestion des tuyaux
     for (let i = 0; i < tabTuyaux.length; i++) {
         tabTuyaux[i].x--;
 
         // Dessin du tuyau
-        ctx.drawImage(imageTuyauBas, tabTuyaux[i].x, tabTuyaux[i].y);
-        ctx.drawImage(imageTuyauHaut, tabTuyaux[i].x, tabTuyaux[i].y - ecartTuyaux - imageTuyauHaut.height);
+        ctx.drawImage(imageTuyauBas, tabTuyaux[i].x, tabTuyaux[i].y, largeurTuyau, imageTuyauBas.height);
+        ctx.drawImage(imageTuyauHaut, tabTuyaux[i].x, tabTuyaux[i].y - ecartTuyaux - imageTuyauHaut.height, largeurTuyau, imageTuyauHaut.height);
 
         // Ajout d'un nouveau tuyau lorsque le tuyau actuel atteint x = 100
         if (tabTuyaux[i].x === 100) {
             tabTuyaux.push({
                 x: cvs.width,
-                y: Math.floor(100 + Math.random() * 180)
+                y: Math.floor(100 + Math.random() * (cvs.height - 200))
             });
         } 
         else if (tabTuyaux[i].x + largeurTuyau < 0) {
@@ -125,8 +139,9 @@ function dessine() {
         }
 
         // Gestion des collisions
-        if (yOiseau < 0 || yOiseau + hauteurOiseau > 300 || (xOiseau + largeurOiseau >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau
-            && (yOiseau + hauteurOiseau >= tabTuyaux[i].y || yOiseau + ecartTuyaux <= tabTuyaux[i].y))) {
+        if (yOiseau < 0 || yOiseau + hauteurOiseau > cvs.height - imageAvantPlan.height || 
+            (xOiseau + largeurOiseau >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau &&
+            (yOiseau + hauteurOiseau >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux))) {
             sonChoc.play().catch(() => console.error("Erreur lors de la lecture du son 'sonChoc.mp3'"));
             finDuJeu = true;
         }
@@ -138,15 +153,15 @@ function dessine() {
         }
     }
 
-    ctx.drawImage(imageAvantPlan, 0, cvs.height - imageAvantPlan.height);
+    ctx.drawImage(imageAvantPlan, 0, cvs.height - imageAvantPlan.height, cvs.width, imageAvantPlan.height);
 
     // Mouvement de l'oiseau
     yOiseau += gravite;
     if (oiseauMonte > 0) {
         oiseauMonte--;
-        ctx.drawImage(imageOiseau2, xOiseau, yOiseau);
+        ctx.drawImage(imageOiseau2, xOiseau, yOiseau, largeurOiseau, hauteurOiseau);
     } else {
-        ctx.drawImage(imageOiseau1, xOiseau, yOiseau);
+        ctx.drawImage(imageOiseau1, xOiseau, yOiseau, largeurOiseau, hauteurOiseau);
     }
 
     ctx.lineWidth = 3;
@@ -161,9 +176,9 @@ function dessine() {
     } else {
         ctx.fillStyle = "black";
         ctx.font = "30px Verdana";
-        ctx.fillText("Fin de partie", 50, 200);
+        ctx.fillText("Fin de partie", cvs.width / 2 - 75, cvs.height / 2 - 10);
         ctx.font = "20px Verdana";
-        ctx.fillText("Cliquez pour recommencer", 15, 230);
+        ctx.fillText("Cliquez pour recommencer", cvs.width / 2 - 120, cvs.height / 2 + 20);
     }
 }
 
