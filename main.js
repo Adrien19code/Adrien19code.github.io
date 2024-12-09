@@ -1,29 +1,24 @@
 // Contexte graphique
 const cvs = document.getElementById("zone_de_dessin");
+const ctx = cvs.getContext("2d");
 
-// Ajustement de la taille et du zoom pour les appareils mobiles
+// Fonction pour ajuster automatiquement la taille du canvas en fonction de l'écran
 function ajusterTailleCanvas() {
-    let facteurZoom = 1; // Par défaut (écrans plus grands)
+    const largeurEcran = window.innerWidth;
+    const hauteurEcran = window.innerHeight;
 
-    if (window.innerWidth < 768) { // Seuil pour appareils mobiles
-        facteurZoom = 2; // Augmenter le zoom sur mobile
-        cvs.width = window.innerWidth * 0.9; // 90% de la largeur de l'écran
-        cvs.height = cvs.width * 4 / 3; // Ratio fixe (par exemple 4:3)
+    if (largeurEcran < 768) { // Pour les appareils mobiles
+        cvs.width = largeurEcran * 0.8; // 80% de la largeur de l'écran
+        cvs.height = cvs.width * 4 / 3; // Ratio 4:3 pour un affichage proportionné
     } else {
-        cvs.width = 300;
+        cvs.width = 300; // Taille standard pour les écrans plus grands
         cvs.height = 400;
     }
-
-    // Appliquer le facteur de zoom
-    cvs.style.transform = `scale(${facteurZoom})`;
-    cvs.style.transformOrigin = "top left"; // Origine pour le zoom
 }
 
-// Appeler la fonction au chargement de la page et lors du redimensionnement
+// Appeler la fonction au chargement et lors des redimensionnements
 ajusterTailleCanvas();
 window.addEventListener("resize", ajusterTailleCanvas);
-
-const ctx = cvs.getContext("2d");
 
 // Images
 const imageArrierePlan = new Image();
@@ -44,12 +39,12 @@ const sonVole = new Audio("sons/sonVole.mp3");
 const sonScore = new Audio("sons/sonScore.mp3");
 const sonChoc = new Audio("sons/sonChoc.mp3");
 
-// Activation des sons uniquement après une interaction utilisateur (nécessaire pour certains navigateurs)
+// Activation des sons uniquement après une interaction utilisateur
 let sonsPrets = false;
 
 document.addEventListener("click", () => {
     if (!sonsPrets) {
-        sonVole.play().catch(() => {}); // Lance une lecture silencieuse pour initialiser les sons
+        sonVole.play().catch(() => {});
         sonScore.play().catch(() => {});
         sonChoc.play().catch(() => {});
         sonsPrets = true;
@@ -60,7 +55,7 @@ document.addEventListener("click", () => {
 const largeurTuyau = 40;
 const ecartTuyaux = 80;
 let tabTuyaux = [];
-tabTuyaux[0] = { 
+tabTuyaux[0] = {
     x: cvs.width,
     y: cvs.height - 150
 };
@@ -77,31 +72,31 @@ let finDuJeu = false;
 let score = 0;
 
 // Gestion de la barre d'espace et des événements tactiles
-let espaceMaintenu = false;  // Flag pour savoir si l'espace est maintenu
+let espaceMaintenu = false;
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
     if (event.code === "Space" && !espaceMaintenu) {
         espaceMaintenu = true;
         monte();
     }
 });
 
-document.addEventListener("keyup", function(event) {
+document.addEventListener("keyup", function (event) {
     if (event.code === "Space") {
         espaceMaintenu = false;
     }
 });
 
 // Événements tactiles sur mobile
-cvs.addEventListener("touchstart", function(event) {
-    event.preventDefault(); // Empêche le zoom
+cvs.addEventListener("touchstart", function (event) {
+    event.preventDefault();
     if (!espaceMaintenu) {
         espaceMaintenu = true;
         monte();
     }
 });
 
-cvs.addEventListener("touchend", function(event) {
+cvs.addEventListener("touchend", function (event) {
     espaceMaintenu = false;
 });
 
@@ -134,21 +129,20 @@ function dessine() {
         ctx.drawImage(imageTuyauBas, tabTuyaux[i].x, tabTuyaux[i].y, largeurTuyau, imageTuyauBas.height);
         ctx.drawImage(imageTuyauHaut, tabTuyaux[i].x, tabTuyaux[i].y - ecartTuyaux - imageTuyauHaut.height, largeurTuyau, imageTuyauHaut.height);
 
-        // Ajout d'un nouveau tuyau lorsque le tuyau actuel atteint x = 100
+        // Ajout d'un nouveau tuyau
         if (tabTuyaux[i].x === 100) {
             tabTuyaux.push({
                 x: cvs.width,
                 y: Math.floor(100 + Math.random() * (cvs.height - 200))
             });
-        } 
-        else if (tabTuyaux[i].x + largeurTuyau < 0) {
+        } else if (tabTuyaux[i].x + largeurTuyau < 0) {
             tabTuyaux.splice(i, 1);
         }
 
         // Gestion des collisions
-        if (yOiseau < 0 || yOiseau + hauteurOiseau > cvs.height - imageAvantPlan.height || 
+        if (yOiseau < 0 || yOiseau + hauteurOiseau > cvs.height - imageAvantPlan.height ||
             (xOiseau + largeurOiseau >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau &&
-            (yOiseau + hauteurOiseau >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux))) {
+                (yOiseau + hauteurOiseau >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux))) {
             sonChoc.play().catch(() => console.error("Erreur lors de la lecture du son 'sonChoc.mp3'"));
             finDuJeu = true;
         }
@@ -171,12 +165,9 @@ function dessine() {
         ctx.drawImage(imageOiseau1, xOiseau, yOiseau, largeurOiseau, hauteurOiseau);
     }
 
-    ctx.lineWidth = 3;
-    ctx.strokeRect(0, 0, cvs.width, cvs.height);
-
     ctx.fillStyle = "black";
     ctx.font = "20px Verdana";
-    ctx.fillText("Score :" + score, 10, cvs.height - 20);
+    ctx.fillText("Score : " + score, 10, cvs.height - 20);
 
     if (!finDuJeu) {
         requestAnimationFrame(dessine);
@@ -188,13 +179,6 @@ function dessine() {
         ctx.fillText("Cliquez pour recommencer", cvs.width / 2 - 120, cvs.height / 2 + 20);
     }
 }
-
-// Écouteur d'événement pour recommencer le jeu après la fin
-cvs.addEventListener("click", function() {
-    if (finDuJeu) {
-        rechargeLejeu();
-    }
-});
 
 // Lancement du jeu
 dessine();
