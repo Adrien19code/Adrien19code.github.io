@@ -1,15 +1,22 @@
 // Contexte graphique
 const cvs = document.getElementById("zone_de_dessin");
 
-// Ajustement de la taille pour les appareils mobiles
+// Ajustement de la taille et du zoom pour les appareils mobiles
 function ajusterTailleCanvas() {
+    let facteurZoom = 1; // Par défaut (écrans plus grands)
+
     if (window.innerWidth < 768) { // Seuil pour appareils mobiles
+        facteurZoom = 2; // Augmenter le zoom sur mobile
         cvs.width = window.innerWidth * 0.9; // 90% de la largeur de l'écran
-        cvs.height = window.innerHeight * 0.7; // 70% de la hauteur de l'écran
+        cvs.height = cvs.width * 4 / 3; // Ratio fixe (par exemple 4:3)
     } else {
         cvs.width = 300;
         cvs.height = 400;
     }
+
+    // Appliquer le facteur de zoom
+    cvs.style.transform = `scale(${facteurZoom})`;
+    cvs.style.transformOrigin = "top left"; // Origine pour le zoom
 }
 
 // Appeler la fonction au chargement de la page et lors du redimensionnement
