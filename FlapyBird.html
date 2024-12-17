@@ -3,11 +3,68 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta charset="UTF-8">
+    <title>Flappy Bird</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: white;
+            position: relative;
+        }
+
+        #page-accueil {
+            text-align: center;
+        }
+
+        #bouton-play {
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #0077ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #bouton-play:hover {
+            background-color: #0c00b1;
+        }
+
+        #bouton-quitter {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #ff4b4b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #bouton-quitter:hover {
+            background-color: #b03939;
+        }
+
+        canvas {
+            display: none; /* Le canvas est caché par défaut */
+        }
+    </style>
 </head>
 <body>
-    <canvas id ="zone_de_dessin"></canvas>
+    <div id="page-accueil">
+        <button id="bouton-play">Play Flappy Bird</button>
+    </div>
+    <button id="bouton-quitter">Quitter</button>
+    <canvas id="zone_de_dessin"></canvas>
     <script src="main.js"></script>
-</body> 
+</body>
 </html>
-
 
