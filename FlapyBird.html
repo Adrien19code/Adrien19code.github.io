@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> 
+<html lang="fr">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird</title>
     <style>
         body {
@@ -11,58 +11,38 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: white;
-            position: relative;
+            background-color: #70c5ce;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
         }
-
+        #zone_de_dessin {
+            display: none;
+            background-color: #70c5ce;
+            border: 2px solid #000;
+        }
         #page-accueil {
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
-
-        #bouton-play {
+        #page-accueil button {
+            font-size: 18px;
             padding: 10px 20px;
-            font-size: 20px;
+            margin: 10px;
             cursor: pointer;
-            background-color: #0077ff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
         }
-
-        #bouton-play:hover {
-            background-color: #0c00b1;
-        }
-
         #bouton-quitter {
             display: none;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #ff4b4b;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        #bouton-quitter:hover {
-            background-color: #b03939;
-        }
-
-        canvas {
-            display: none; /* Le canvas est caché par défaut */
         }
     </style>
 </head>
 <body>
     <div id="page-accueil">
-        <button id="bouton-play">Play Flappy Bird</button>
+        <h1>Flappy Bird</h1>
+        <button id="bouton-play">Jouer</button>
+        <button id="bouton-quitter">Quitter</button>
     </div>
-    <button id="bouton-quitter">Quitter</button>
     <canvas id="zone_de_dessin"></canvas>
     <script src="main.js"></script>
 </body>
