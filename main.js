@@ -163,26 +163,18 @@ function dessine() {
             yOiseau + 24 > cvs.height - imageAvantPlan.height ||
             (xOiseau + 34 >= tabTuyaux[i].x &&
                 xOiseau <= tabTuyaux[i].x + largeurTuyau &&
-                (yOiseau + 24 >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux))
+                (yOiseau + 24 >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux - imageTuyauHaut.height))
         ) {
+            sonChoc.play().catch(() => console.error("Erreur sonChoc"));
             finDuJeu = true;
-            sonChoc.play().catch(() => {});
-
-            // Mettre à jour le score maximum si nécessaire
             if (score > scoreMax) {
                 scoreMax = score;
-                localStorage.setItem("scoreMax", scoreMax); // Sauvegarder le score maximum
+                localStorage.setItem("scoreMax", scoreMax);
             }
-        }
-
-        if (xOiseau === tabTuyaux[i].x + largeurTuyau + 5) {
-            score++;
-            sonScore.play().catch(() => {});
         }
     }
 
     ctx.drawImage(imageAvantPlan, 0, cvs.height - imageAvantPlan.height, cvs.width, imageAvantPlan.height);
-
     ctx.drawImage(oiseauMonte > 0 ? imageOiseau2 : imageOiseau1, xOiseau, yOiseau, 34, 24);
 
     if (oiseauMonte > 0) {
@@ -191,11 +183,11 @@ function dessine() {
         yOiseau += gravite;
     }
 
-    // Texte en noir
+    // Texte du score
     ctx.fillStyle = "black";
     ctx.font = "15px Arial";
     ctx.fillText("Score: " + score, 10, 20);
-    ctx.fillText("Score Max: " + scoreMax, 10, 40); // Afficher le score maximum
+    ctx.fillText("Score Max: " + scoreMax, 10, 40);
 
     if (finDuJeu) {
         ctx.font = "20px Arial";
@@ -210,3 +202,4 @@ function dessine() {
         requestAnimationFrame(dessine);
     }
 }
+
