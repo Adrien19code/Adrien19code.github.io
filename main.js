@@ -111,6 +111,23 @@ document.addEventListener("keyup", function (event) {
     }
 });
 
+// Événement tactile pour les appareils mobiles
+document.addEventListener("touchstart", function (event) {
+    if (!toucheEnfoncee) {
+        if (finDuJeu) {
+            demarrerJeu(); // Redémarrer le jeu si terminé
+        } else {
+            monte(); // Fait sauter l'oiseau
+        }
+        toucheEnfoncee = true; // Empêche les sauts multiples
+    }
+});
+
+document.addEventListener("touchend", function (event) {
+    toucheEnfoncee = false; // Autorise un nouveau saut après relâchement
+});
+
+// Fonction pour faire sauter l'oiseau
 function monte() {
     if (!finDuJeu) {
         oiseauMonte = 10;
@@ -182,7 +199,7 @@ function dessine() {
 
     if (finDuJeu) {
         ctx.font = "20px Arial";
-        const messageLigne1 = "Cliquez sur la barre espace";
+        const messageLigne1 = "Cliquez sur l'écran";
         const messageLigne2 = "pour rejouer";
         const texteLargeurLigne1 = ctx.measureText(messageLigne1).width;
         const texteLargeurLigne2 = ctx.measureText(messageLigne2).width;
