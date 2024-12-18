@@ -24,10 +24,7 @@ const pageAccueil = document.getElementById("page-accueil");
 const boutonPlay = document.getElementById("bouton-play");
 const boutonQuitter = document.getElementById("bouton-quitter");
 
-let jeuDemarre = false; // Empêche le démarrage du jeu depuis la page d'accueil
-
 boutonPlay.addEventListener("click", function () {
-    jeuDemarre = true; // Active le démarrage du jeu
     pageAccueil.style.display = "none";
     boutonQuitter.style.display = "block";
     cvs.style.display = "block";
@@ -36,7 +33,6 @@ boutonPlay.addEventListener("click", function () {
 
 boutonQuitter.addEventListener("click", function () {
     finDuJeu = true;
-    jeuDemarre = false; // Réinitialise l'état de démarrage
     pageAccueil.style.display = "flex";
     boutonQuitter.style.display = "none";
     cvs.style.display = "none";
@@ -44,26 +40,26 @@ boutonQuitter.addEventListener("click", function () {
 
 // Images
 const imageArrierePlan = new Image();
-imageArrierePlan.src = "./images/arrierePlan.png";
+imageArrierePlan.src = "images/arrierePlan.png";
 const imageAvantPlan = new Image();
-imageAvantPlan.src = "./images/avantPlan.png";
+imageAvantPlan.src = "images/avantPlan.png";
 const imageTuyauBas = new Image();
-imageTuyauBas.src = "./images/tuyauBas.png";
+imageTuyauBas.src = "images/tuyauBas.png";
 const imageTuyauHaut = new Image();
-imageTuyauHaut.src = "./images/tuyauHaut.png";
+imageTuyauHaut.src = "images/tuyauHaut.png";
 const imageOiseau1 = new Image();
-imageOiseau1.src = "./images/oiseau1.png";
+imageOiseau1.src = "images/oiseau1.png";
 const imageOiseau2 = new Image();
-imageOiseau2.src = "./images/oiseau2.png";
+imageOiseau2.src = "images/oiseau2.png";
 
 // Sons
-const sonVole = new Audio("./sons/sonVole.mp3");
-const sonScore = new Audio("./sons/sonScore.mp3");
-const sonChoc = new Audio("./sons/sonChoc.mp3");
+const sonVole = new Audio("sons/sonVole.mp3");
+const sonScore = new Audio("sons/sonScore.mp3");
+const sonChoc = new Audio("sons/sonChoc.mp3");
 
 let sonsPrets = false;
 document.addEventListener("click", () => {
-    if (!sonsPrets && jeuDemarre) {
+    if (!sonsPrets) {
         sonVole.play().catch(() => {});
         sonScore.play().catch(() => {});
         sonChoc.play().catch(() => {});
@@ -75,7 +71,7 @@ document.addEventListener("click", () => {
 const largeurTuyau = 40;
 const ecartTuyaux = 80;
 let tabTuyaux, xOiseau, yOiseau, gravite, oiseauMonte, score, finDuJeu;
-let espaceEnfonce = false; // Gérer l'appui sur la barre espace
+let toucheEnfoncee = false; // Empêche les sauts multiples lorsque la touche est maintenue
 
 // Charger le score maximum depuis localStorage
 let scoreMax = localStorage.getItem("scoreMax") ? parseInt(localStorage.getItem("scoreMax")) : 0;
@@ -99,15 +95,19 @@ function demarrerJeu() {
 
 // Événements clavier
 document.addEventListener("keydown", function (event) {
-    if (event.code === "Space" && !finDuJeu && jeuDemarre && !espaceEnfonce) {
-        monte();
-        espaceEnfonce = true; // Empêche un nouvel appui tant que la barre n'est pas relâchée
+    if (event.code === "Space" && !toucheEnfoncee) {
+        if (finDuJeu) {
+            demarrerJeu(); // Redémarrer le jeu si terminé
+        } else {
+            monte(); // Fait sauter l'oiseau
+        }
+        toucheEnfoncee = true; // Empêche les sauts multiples
     }
 });
 
 document.addEventListener("keyup", function (event) {
     if (event.code === "Space") {
-        espaceEnfonce = false; // Autorise un nouvel appui
+        toucheEnfoncee = false; // Autorise un nouveau saut après relâchement
     }
 });
 
@@ -140,13 +140,16 @@ function dessine() {
             tabTuyaux.splice(i, 1);
         }
 
+        // Détection de collision
         if (
             yOiseau < 0 ||
             yOiseau + 24 > cvs.height - imageAvantPlan.height ||
-            (xOiseau + 34 >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau &&
+            (xOiseau + 34 >= tabTuyaux[i].x &&
+                xOiseau <= tabTuyaux[i].x + largeurTuyau &&
                 (yOiseau + 24 >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux))
         ) {
             finDuJeu = true;
+            sonChoc.play().catch(() => {});
 
             // Mettre à jour le score maximum si nécessaire
             if (score > scoreMax) {
@@ -171,15 +174,23 @@ function dessine() {
         yOiseau += gravite;
     }
 
+    // Texte en noir
     ctx.fillStyle = "black";
-    ctx.font = "16px Arial";
-    ctx.fillText("Score : " + score, 10, 20);
-    ctx.fillText("Meilleur Score : " + scoreMax, 10, 40);
+    ctx.font = "15px Arial";
+    ctx.fillText("Score: " + score, 10, 20);
+    ctx.fillText("Score Max: " + scoreMax, 10, 40); // Afficher le score maximum
 
-    if (!finDuJeu) {
-        requestAnimationFrame(dessine);
+    if (finDuJeu) {
+        ctx.font = "20px Arial";
+        const messageLigne1 = "Cliquez sur la barre espace";
+        const messageLigne2 = "pour rejouer";
+        const texteLargeurLigne1 = ctx.measureText(messageLigne1).width;
+        const texteLargeurLigne2 = ctx.measureText(messageLigne2).width;
+
+        ctx.fillText(messageLigne1, (cvs.width - texteLargeurLigne1) / 2, cvs.height / 2 - 10);
+        ctx.fillText(messageLigne2, (cvs.width - texteLargeurLigne2) / 2, cvs.height / 2 + 20);
     } else {
-        ctx.fillText("Game Over", cvs.width / 2 - 50, cvs.height / 2);
+        requestAnimationFrame(dessine);
     }
 }
 
