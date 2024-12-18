@@ -1,4 +1,4 @@
-// Contexte graphique
+// Contexte graphique 
 const cvs = document.getElementById("zone_de_dessin");
 const ctx = cvs.getContext("2d");
 
@@ -40,22 +40,22 @@ boutonQuitter.addEventListener("click", function () {
 
 // Images
 const imageArrierePlan = new Image();
-imageArrierePlan.src = "images/arrierePlan.png";
+imageArrierePlan.src = "images/arrierePlan.png"; // Chemin vers le dossier 'images'
 const imageAvantPlan = new Image();
-imageAvantPlan.src = "images/avantPlan.png";
+imageAvantPlan.src = "images/avantPlan.png"; // Chemin vers le dossier 'images'
 const imageTuyauBas = new Image();
-imageTuyauBas.src = "images/tuyauBas.png";
+imageTuyauBas.src = "images/tuyauBas.png"; // Chemin vers le dossier 'images'
 const imageTuyauHaut = new Image();
-imageTuyauHaut.src = "images/tuyauHaut.png";
+imageTuyauHaut.src = "images/tuyauHaut.png"; // Chemin vers le dossier 'images'
 const imageOiseau1 = new Image();
-imageOiseau1.src = "images/oiseau1.png";
+imageOiseau1.src = "images/oiseau1.png"; // Chemin vers le dossier 'images'
 const imageOiseau2 = new Image();
-imageOiseau2.src = "images/oiseau2.png";
+imageOiseau2.src = "images/oiseau2.png"; // Chemin vers le dossier 'images'
 
 // Sons
-const sonVole = new Audio("sons/sonVole.mp3");
-const sonScore = new Audio("sons/sonScore.mp3");
-const sonChoc = new Audio("sons/sonChoc.mp3");
+const sonVole = new Audio("sons/sonVole.mp3"); // Chemin vers le dossier 'sons'
+const sonScore = new Audio("sons/sonScore.mp3"); // Chemin vers le dossier 'sons'
+const sonChoc = new Audio("sons/sonChoc.mp3"); // Chemin vers le dossier 'sons'
 
 let sonsPrets = false;
 document.addEventListener("click", () => {
@@ -193,4 +193,3 @@ function dessine() {
         requestAnimationFrame(dessine);
     }
 }
-
