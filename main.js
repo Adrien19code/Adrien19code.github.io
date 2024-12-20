@@ -167,7 +167,7 @@ function dessine() {
                 yOiseau + 24 >= tabTuyaux[i].y)
         ) {
             sonChoc.play().catch(() => console.error("Erreur sonChoc"));
-            finDuJeu = true;
+            finDuJeu = true;  // Le jeu s'arrête immédiatement après la collision
             if (score > scoreMax) {
                 scoreMax = score;
                 localStorage.setItem("scoreMax", scoreMax);
@@ -200,6 +200,6 @@ function dessine() {
         ctx.fillText(messageLigne1, (cvs.width - texteLargeurLigne1) / 2, cvs.height / 2 - 10);
         ctx.fillText(messageLigne2, (cvs.width - texteLargeurLigne2) / 2, cvs.height / 2 + 20);
     } else {
-        requestAnimationFrame(dessine);
+        requestAnimationFrame(dessine); // Continuation de l'animation tant que le jeu n'est pas fini
     }
 }
