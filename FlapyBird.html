@@ -4,28 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flapy Bird</title>
+    <style>
+        /* Centrage du contenu */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #page-accueil {
+            text-align: center;
+        }
+        #zone_de_dessin {
+            border: 1px solid black;
+            display: none;
+        }
+        #bouton-quitter {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
     <!-- Page d'accueil -->
-    <div id="page-accueil" style="display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;">
-        <div>
-            <button id="bouton-play">
-                Jouer à Flapy Bird
-            </button>
-        </div>
+    <div id="page-accueil">
+        <button id="bouton-play">
+            Jouer à Flapy Bird
+        </button>
     </div>
 
     <!-- Canvas pour le jeu -->
-    <canvas id="zone_de_dessin" style="display: none; border: 1px solid black;"></canvas>
+    <canvas id="zone_de_dessin"></canvas>
 
-    <!-- Bouton Quitter décalé à droite -->
+    <!-- Bouton Quitter -->
     <button 
-        id="bouton-quitter" 
-        style="position: absolute; top: 10px; right: 10px; padding: 10px 20px; font-size: 16px; border: 1px solid black;">
+        id="bouton-quitter">
         Quitter
     </button>
 
     <script src="main.js"></script>
 </body>
 </html>
-
