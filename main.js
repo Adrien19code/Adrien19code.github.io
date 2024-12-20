@@ -157,13 +157,14 @@ function dessine() {
             tabTuyaux.splice(i, 1);
         }
 
-        // Détection de collision
+        // Détection de collision : vérification des bords des tuyaux
         if (
-            yOiseau < 0 ||
-            yOiseau + 24 > cvs.height - imageAvantPlan.height ||
-            (xOiseau + 34 >= tabTuyaux[i].x &&
-                xOiseau <= tabTuyaux[i].x + largeurTuyau &&
-                (yOiseau + 24 >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux - imageTuyauHaut.height))
+            yOiseau < 0 || // Collision avec le bord supérieur
+            yOiseau + 24 > cvs.height - imageAvantPlan.height || // Collision avec le bord inférieur
+            (xOiseau + 34 >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau && 
+                (yOiseau + 24 >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux - imageTuyauHaut.height)) || // Collision avec le côté des tuyaux
+            (xOiseau + 34 >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau && // Collision avec le côté du tuyau bas
+                yOiseau + 24 >= tabTuyaux[i].y)
         ) {
             sonChoc.play().catch(() => console.error("Erreur sonChoc"));
             finDuJeu = true;
@@ -191,7 +192,7 @@ function dessine() {
 
     if (finDuJeu) {
         ctx.font = "20px Arial";
-        const messageLigne1 = "Cliquez sur l'écran";
+        const messageLigne1 = "Cliquez sur la barre espace";
         const messageLigne2 = "pour rejouer";
         const texteLargeurLigne1 = ctx.measureText(messageLigne1).width;
         const texteLargeurLigne2 = ctx.measureText(messageLigne2).width;
@@ -202,4 +203,3 @@ function dessine() {
         requestAnimationFrame(dessine);
     }
 }
-
