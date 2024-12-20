@@ -81,9 +81,9 @@ function resetJeu() {
     tabTuyaux = [{ x: cvs.width, y: cvs.height - 150 }];
     xOiseau = 100;
     yOiseau = 150;
-    gravite = 1;
+    gravite = 1.5; // Augmenter la gravité pour que l'oiseau tombe plus vite
     oiseauMonte = 0;
-    score = 0;
+    score = 0; // Réinitialiser le score
     finDuJeu = false;
 }
 
@@ -141,7 +141,7 @@ function dessine() {
     ctx.drawImage(imageArrierePlan, 0, 0, cvs.width, cvs.height);
 
     for (let i = 0; i < tabTuyaux.length; i++) {
-        tabTuyaux[i].x--;
+        tabTuyaux[i].x -= 2; // Augmenter la vitesse de déplacement des tuyaux
 
         ctx.drawImage(imageTuyauBas, tabTuyaux[i].x, tabTuyaux[i].y, largeurTuyau, imageTuyauBas.height);
         ctx.drawImage(imageTuyauHaut, tabTuyaux[i].x, tabTuyaux[i].y - ecartTuyaux - imageTuyauHaut.height, largeurTuyau, imageTuyauHaut.height);
@@ -173,6 +173,13 @@ function dessine() {
                 localStorage.setItem("scoreMax", scoreMax);
             }
         }
+
+        // Incrémenter le score si l'oiseau passe entre les tuyaux
+        if (tabTuyaux[i].x + largeurTuyau < xOiseau && !tabTuyaux[i].passed) {
+            score++; // Incrémenter le score
+            tabTuyaux[i].passed = true; // Marquer que le tuyau a été traversé
+            sonScore.play().catch(() => console.error("Erreur sonScore"));
+        }
     }
 
     ctx.drawImage(imageAvantPlan, 0, cvs.height - imageAvantPlan.height, cvs.width, imageAvantPlan.height);
@@ -181,7 +188,7 @@ function dessine() {
     if (oiseauMonte > 0) {
         oiseauMonte--;
     } else {
-        yOiseau += gravite;
+        yOiseau += gravite; // L'oiseau tombe plus vite
     }
 
     // Texte du score
