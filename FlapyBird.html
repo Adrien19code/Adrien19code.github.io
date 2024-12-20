@@ -3,75 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird</title>
-    <style>
-        /* Styles généraux */
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #70c5ce; /* Bleu ciel */
-            font-family: Arial, sans-serif;
-        }
-
-        /* Styles pour le bouton "Quitter" */
-        #bouton-quitter {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 10px;
-            font-size: 18px;
-            background-color: red;
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: none; /* Initialement caché */
-        }
-
-        /* Canvas pour le jeu */
-        #zone_de_dessin {
-            display: none; /* Masqué initialement */
-        }
-
-        /* Page d'accueil */
-        #page-accueil {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Bouton "Jouer" */
-        #bouton-play {
-            padding: 15px 30px;
-            font-size: 24px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        #bouton-play:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>Flapy Bird</title>
 </head>
 <body>
-    <div id="page-accueil">
-        <button id="bouton-play">Jouer</button>
+    <!-- Page d'accueil -->
+    <div id="page-accueil" style="display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;">
+        <div>
+            <button id="bouton-play">
+                Jouer à Flapy Bird
+            </button>
+        </div>
     </div>
 
-    <canvas id="zone_de_dessin"></canvas>
+    <!-- Canvas pour le jeu -->
+    <canvas id="zone_de_dessin" style="display: none; border: 1px solid black;"></canvas>
 
-    <div id="page-jeu">
-        <button id="bouton-quitter">Quitter</button>
-    </div>
+    <!-- Bouton Quitter décalé à droite -->
+    <button 
+        id="bouton-quitter" 
+        style="position: absolute; top: 10px; right: 10px; padding: 10px 20px; font-size: 16px; border: 1px solid black;">
+        Quitter
+    </button>
 
     <script src="main.js"></script>
 </body>
 </html>
+
