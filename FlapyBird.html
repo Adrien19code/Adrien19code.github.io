@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flapy Bird</title>
     <style>
         body, html {
             margin: 0;
@@ -12,13 +13,16 @@
             justify-content: center;
             align-items: center;
         }
+
         #page-accueil {
             text-align: center;
         }
+
         #zone_de_dessin {
             border: 1px solid black;
             display: none;
         }
+
         #bouton-quitter {
             position: absolute;
             top: 10px;
@@ -27,6 +31,33 @@
             font-size: 16px;
             border: 1px solid black;
             display: none; /* Le bouton est masqué par défaut */
+        }
+
+        /* Adaptation pour les téléphones */
+        @media (max-width: 768px) {
+            body, html {
+                height: 100vh; /* Assurer que la hauteur de l'écran est utilisée entièrement */
+            }
+
+            #zone_de_dessin {
+                width: 80%; /* Le canvas prend 80% de la largeur de l'écran */
+                height: auto;
+                display: block;
+            }
+
+            #page-accueil {
+                margin-top: 20px; /* Espacement pour que le bouton soit un peu plus bas */
+            }
+
+            #bouton-play {
+                font-size: 18px; /* Augmenter la taille du texte pour le bouton play */
+                padding: 15px 30px; /* Agrandir le bouton pour le rendre plus facile à cliquer */
+            }
+
+            #bouton-quitter {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
