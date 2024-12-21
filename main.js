@@ -1,4 +1,4 @@
-// Contexte graphique 
+// Contexte graphique
 const cvs = document.getElementById("zone_de_dessin");
 const ctx = cvs.getContext("2d");
 
@@ -40,22 +40,22 @@ boutonQuitter.addEventListener("click", function () {
 
 // Images
 const imageArrierePlan = new Image();
-imageArrierePlan.src = "images/arrierePlan.png"; // Chemin vers le dossier 'images'
+imageArrierePlan.src = "images/arrierePlan.png";
 const imageAvantPlan = new Image();
-imageAvantPlan.src = "images/avantPlan.png"; // Chemin vers le dossier 'images'
+imageAvantPlan.src = "images/avantPlan.png";
 const imageTuyauBas = new Image();
-imageTuyauBas.src = "images/tuyauBas.png"; // Chemin vers le dossier 'images'
+imageTuyauBas.src = "images/tuyauBas.png";
 const imageTuyauHaut = new Image();
-imageTuyauHaut.src = "images/tuyauHaut.png"; // Chemin vers le dossier 'images'
+imageTuyauHaut.src = "images/tuyauHaut.png";
 const imageOiseau1 = new Image();
-imageOiseau1.src = "images/oiseau1.png"; // Chemin vers le dossier 'images'
+imageOiseau1.src = "images/oiseau1.png";
 const imageOiseau2 = new Image();
-imageOiseau2.src = "images/oiseau2.png"; // Chemin vers le dossier 'images'
+imageOiseau2.src = "images/oiseau2.png";
 
 // Sons
-const sonVole = new Audio("sons/sonVole.mp3"); // Chemin vers le dossier 'sons'
-const sonScore = new Audio("sons/sonScore.mp3"); // Chemin vers le dossier 'sons'
-const sonChoc = new Audio("sons/sonChoc.mp3"); // Chemin vers le dossier 'sons'
+const sonVole = new Audio("sons/sonVole.mp3");
+const sonScore = new Audio("sons/sonScore.mp3");
+const sonChoc = new Audio("sons/sonChoc.mp3");
 
 let sonsPrets = false;
 document.addEventListener("click", () => {
@@ -69,7 +69,7 @@ document.addEventListener("click", () => {
 
 // Variables du jeu
 const largeurTuyau = 40;
-const ecartTuyaux = 80;
+const ecartTuyaux = 85;
 let tabTuyaux, xOiseau, yOiseau, gravite, oiseauMonte, score, finDuJeu;
 let toucheEnfoncee = false; // Empêche les sauts multiples lorsque la touche est maintenue
 
@@ -81,7 +81,7 @@ function resetJeu() {
     tabTuyaux = [{ x: cvs.width, y: cvs.height - 150 }];
     xOiseau = 100;
     yOiseau = 150;
-    gravite = 1.5; // Augmenter la gravité pour que l'oiseau tombe plus vite
+    gravite = 2; // Augmenter la gravité pour que l'oiseau tombe plus vite
     oiseauMonte = 0;
     score = 0; // Réinitialiser le score
     finDuJeu = false;
@@ -130,7 +130,7 @@ document.addEventListener("touchend", function (event) {
 // Fonction pour faire sauter l'oiseau
 function monte() {
     if (!finDuJeu) {
-        oiseauMonte = 10;
+        oiseauMonte = 15;
         yOiseau -= 25;
         sonVole.play().catch(() => console.error("Erreur sonVole"));
     }
@@ -157,17 +157,21 @@ function dessine() {
             tabTuyaux.splice(i, 1);
         }
 
-        // Détection de collision : vérification des bords des tuyaux
+        // Détection de collision
         if (
             yOiseau < 0 || // Collision avec le bord supérieur
-            yOiseau + 24 > cvs.height - imageAvantPlan.height || // Collision avec le bord inférieur
-            (xOiseau + 34 >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau && 
-                (yOiseau + 24 >= tabTuyaux[i].y || yOiseau <= tabTuyaux[i].y - ecartTuyaux - imageTuyauHaut.height)) || // Collision avec le côté des tuyaux
-            (xOiseau + 34 >= tabTuyaux[i].x && xOiseau <= tabTuyaux[i].x + largeurTuyau && // Collision avec le côté du tuyau bas
-                yOiseau + 24 >= tabTuyaux[i].y)
+            yOiseau + 24 > cvs.height - imageAvantPlan.height || // Collision avec le sol
+            (
+                xOiseau + 34 >= tabTuyaux[i].x && 
+                xOiseau <= tabTuyaux[i].x + largeurTuyau && 
+                (
+                    yOiseau <= tabTuyaux[i].y - ecartTuyaux || // Collision avec le tuyau haut
+                    yOiseau + 24 >= tabTuyaux[i].y // Collision avec le tuyau bas
+                )
+            )
         ) {
             sonChoc.play().catch(() => console.error("Erreur sonChoc"));
-            finDuJeu = true;  // Le jeu s'arrête immédiatement après la collision
+            finDuJeu = true; // Le jeu s'arrête immédiatement après la collision
             if (score > scoreMax) {
                 scoreMax = score;
                 localStorage.setItem("scoreMax", scoreMax);
@@ -207,6 +211,6 @@ function dessine() {
         ctx.fillText(messageLigne1, (cvs.width - texteLargeurLigne1) / 2, cvs.height / 2 - 10);
         ctx.fillText(messageLigne2, (cvs.width - texteLargeurLigne2) / 2, cvs.height / 2 + 20);
     } else {
-        requestAnimationFrame(dessine); // Continuation de l'animation tant que le jeu n'est pas fini
+        requestAnimationFrame(dessine);
     }
 }
