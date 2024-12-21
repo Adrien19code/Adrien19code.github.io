@@ -208,6 +208,7 @@ function dessine() {
         const texteLargeurLigne1 = ctx.measureText(messageLigne1).width;
         const texteLargeurLigne2 = ctx.measureText(messageLigne2).width;
 
+        // Afficher le message sur 2 lignes, centré
         ctx.fillText(messageLigne1, (cvs.width - texteLargeurLigne1) / 2, cvs.height / 2 - 10);
         ctx.fillText(messageLigne2, (cvs.width - texteLargeurLigne2) / 2, cvs.height / 2 + 20);
     } else {
