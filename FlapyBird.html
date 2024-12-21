@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flapy Bird</title>
     <style>
-        /* Centrage du contenu */
         body, html {
             margin: 0;
             padding: 0;
@@ -27,23 +27,19 @@
             padding: 10px 20px;
             font-size: 16px;
             border: 1px solid black;
+            display: none; /* Le bouton est masqué par défaut */
         }
     </style>
 </head>
 <body>
-    <!-- Page d'accueil -->
     <div id="page-accueil">
         <button id="bouton-play">
-            Jouer à Flapy Bird
+            Flapy Bird
         </button>
     </div>
 
-    <!-- Canvas pour le jeu -->
     <canvas id="zone_de_dessin"></canvas>
-
-    <!-- Bouton Quitter -->
-    <button 
-        id="bouton-quitter">
+    <button id="bouton-quitter">
         Quitter
     </button>
 
