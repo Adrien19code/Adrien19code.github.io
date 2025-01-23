@@ -1,100 +1,49 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7613820532784769"
-     crossorigin="anonymous"></script>
-    <meta name="google-adsense-account" content="ca-pub-7613820532784769">
-    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
+        /* Centrer le jeu */
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        #page-accueil {
-            text-align: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0; /* Choisissez une couleur de fond pour la page */
         }
 
         #zone_de_dessin {
+            display: block;
             border: 1px solid black;
-            display: none;
         }
 
         #bouton-quitter {
             position: absolute;
             top: 10px;
-            right: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: 1px solid black;
-            display: none; /* Le bouton est masqué par défaut */
+            left: 10px;
+            z-index: 10;
+            padding: 10px 15px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        /* Adaptation pour les téléphones */
-        @media (max-width: 768px) {
-            body, html {
-                height: 100vh; /* Assurer que la hauteur de l'écran est utilisée entièrement */
-            }
-
-            #zone_de_dessin {
-                width: 80%; /* Le canvas prend 80% de la largeur de l'écran */
-                height: auto;
-                display: block;
-            }
-
-            #page-accueil {
-                margin-top: 20px; /* Espacement pour que le bouton soit un peu plus bas */
-            }
-
-            #bouton-play {
-                font-size: 18px; /* Augmenter la taille du texte pour le bouton play */
-                padding: 15px 30px; /* Agrandir le bouton pour le rendre plus facile à cliquer */
-            }
-
-            #bouton-quitter {
-                font-size: 16px;
-                padding: 10px 20px;
-            }
+        #bouton-quitter:hover {
+            background-color: darkred;
         }
     </style>
 </head>
 <body>
-    <amp-ad width="100vw" height="320"
-     type="adsense"
-     data-ad-client="ca-pub-7613820532784769"
-     data-ad-slot="9664960426"
-     data-auto-format="rspv"
-     data-full-width="">
-  <div overflow=""></div>
-</amp-ad>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7613820532784769"
-     crossorigin="anonymous"></script>
-<!-- annonce -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-7613820532784769"
-     data-ad-slot="9664960426"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-    <div id="page-accueil">
-        <button id="bouton-play">
-            Flapy Bird
-        </button>
-    </div>
-
+    <!-- Bouton quitter -->
+    <button id="bouton-quitter">Quitter</button>
+    
+    <!-- Zone de jeu -->
     <canvas id="zone_de_dessin"></canvas>
-    <button id="bouton-quitter">
-        Quitter
-    </button>
 
     <script src="main.js"></script>
 </body>
