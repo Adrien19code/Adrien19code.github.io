@@ -1,4 +1,4 @@
-// Contexte graphique
+// Contexte graphique 
 const cvs = document.getElementById("zone_de_dessin");
 const ctx = cvs.getContext("2d");
 
@@ -18,25 +18,6 @@ function ajusterTailleCanvas() {
 
 ajusterTailleCanvas();
 window.addEventListener("resize", ajusterTailleCanvas);
-
-// Initialiser les éléments de la page
-const pageAccueil = document.getElementById("page-accueil");
-const boutonPlay = document.getElementById("bouton-play");
-const boutonQuitter = document.getElementById("bouton-quitter");
-
-boutonPlay.addEventListener("click", function () {
-    pageAccueil.style.display = "none";
-    boutonQuitter.style.display = "block";
-    cvs.style.display = "block";
-    demarrerJeu();
-});
-
-boutonQuitter.addEventListener("click", function () {
-    finDuJeu = true;
-    pageAccueil.style.display = "flex";
-    boutonQuitter.style.display = "none";
-    cvs.style.display = "none";
-});
 
 // Images
 const imageArrierePlan = new Image();
@@ -92,6 +73,23 @@ function demarrerJeu() {
     resetJeu();
     dessine();
 }
+
+
+
+
+
+// Bouton "Quitter"
+const boutonQuitter = document.getElementById("bouton-quitter");
+boutonQuitter.addEventListener("click", () => {
+    window.location.href = "index.html"; // Redirige vers la page d'accueil
+});
+
+
+
+
+
+
+
 
 // Événements clavier
 document.addEventListener("keydown", function (event) {
@@ -205,13 +203,21 @@ function dessine() {
         ctx.font = "20px Arial";
         const messageLigne1 = "Cliquez sur la barre espace";
         const messageLigne2 = "pour rejouer";
-        const texteLargeurLigne1 = ctx.measureText(messageLigne1).width;
-        const texteLargeurLigne2 = ctx.measureText(messageLigne2).width;
+        const largeurMessage = Math.max(
+            ctx.measureText(messageLigne1).width,
+            ctx.measureText(messageLigne2).width
+        );
+        ctx.fillStyle = "white";
+        ctx.fillRect(cvs.width / 2 - largeurMessage / 2 - 10, cvs.height / 2 - 30, largeurMessage + 20, 60);
 
-        // Afficher le message sur 2 lignes, centré
-        ctx.fillText(messageLigne1, (cvs.width - texteLargeurLigne1) / 2, cvs.height / 2 - 10);
-        ctx.fillText(messageLigne2, (cvs.width - texteLargeurLigne2) / 2, cvs.height / 2 + 20);
-    } else {
-        requestAnimationFrame(dessine);
+        ctx.fillStyle = "black";
+        ctx.fillText(messageLigne1, cvs.width / 2 - largeurMessage / 2, cvs.height / 2 - 10);
+        ctx.fillText(messageLigne2, cvs.width / 2 - largeurMessage / 2, cvs.height / 2 + 20);
+        return;
     }
+
+    requestAnimationFrame(dessine);
 }
+
+// Démarrer le jeu immédiatement
+demarrerJeu();
