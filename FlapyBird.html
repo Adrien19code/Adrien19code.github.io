@@ -3,36 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil</title>
+    <title>Flappy Bird</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
+            background-color: #f0f0f0;
         }
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #4CAF50;
+        #zone_de_dessin {
+            display: block;
+            border: 1px solid black;
+        }
+
+        #bouton-quitter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            padding: 10px 15px;
+            background-color: red;
             color: white;
             border: none;
             border-radius: 5px;
-            margin: 10px;
-            width: 80%;
-            max-width: 300px;
+            cursor: pointer;
         }
 
-        button:hover {
-            background-color: #45a049;
+        #bouton-quitter:hover {
+            background-color: darkred;
         }
     </style>
 </head>
 <body>
-    <button onclick="window.location.href='FlappyBird.html';">Flappy Bird</button>
-    <button onclick="window.location.href='snake.html';">Snake</button>
+    <button id="bouton-quitter">Quitter</button>
+    <canvas id="zone_de_dessin"></canvas>
+
+    <script src="main.js"></script>
 </body>
 </html>
