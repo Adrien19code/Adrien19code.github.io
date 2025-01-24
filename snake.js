@@ -1,166 +1,131 @@
-// Récupérer le canvas et le contexte
-const canvas = document.getElementById("zone_de_jeu");
-const ctx = canvas.getContext("2d");
+let gameInterval; // Variable pour stocker l'intervalle du jeu
+let snake, food, score, direction;
 
-// Ajuster la taille du canvas pour s'adapter aux appareils mobiles
-function ajusterCanvas() {
-    const largeurEcran = window.innerWidth;
-    const hauteurEcran = window.innerHeight;
+// Taille de la grille (20x20 cellules)
+const gridSize = 20;
 
-    if (largeurEcran < 768) {
-        canvas.width = largeurEcran * 0.9;
-        canvas.height = canvas.width;
-    } else {
-        canvas.width = 400;
-        canvas.height = 400;
-    }
-}
-ajusterCanvas();
-window.addEventListener("resize", ajusterCanvas);
-
-// Taille des cases de la grille
-const box = 20;
-
-// Charger les ressources
-const pommeImg = new Image();
-pommeImg.src = "images/pomme.png";
-
-// Sons
-const mangeSon = new Audio("sons/mange.mp3");
-const gameOverSon = new Audio("sons/gameover.mp3");
-
-// Variables du jeu
-let serpent = [{ x: 9 * box, y: 9 * box }];
-let direction = null;
-let pomme = {
-    x: Math.floor(Math.random() * (canvas.width / box)) * box,
-    y: Math.floor(Math.random() * (canvas.height / box)) * box,
-};
-let score = 0;
-
-// Gestion des contrôles clavier
-document.addEventListener("keydown", changerDirection);
-function changerDirection(event) {
-    if (event.code === "ArrowUp" && direction !== "BAS") {
-        direction = "HAUT";
-    } else if (event.code === "ArrowDown" && direction !== "HAUT") {
-        direction = "BAS";
-    } else if (event.code === "ArrowLeft" && direction !== "DROITE") {
-        direction = "GAUCHE";
-    } else if (event.code === "ArrowRight" && direction !== "GAUCHE") {
-        direction = "DROITE";
-    }
+// Fonction pour initialiser ou réinitialiser le jeu
+function initializeGame() {
+    snake = [{ x: 5, y: 5 }]; // Position de départ du serpent
+    food = generateFood(); // Position initiale de la nourriture
+    score = 0;
+    direction = { x: 0, y: 0 }; // Pas de mouvement au début
+    drawBoard();
+    drawSnake();
+    drawFood();
 }
 
-// Gestion des contrôles tactiles
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
-
-canvas.addEventListener("touchstart", (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-});
-
-canvas.addEventListener("touchend", (e) => {
-    touchEndX = e.changedTouches[0].clientX;
-    touchEndY = e.changedTouches[0].clientY;
-
-    const diffX = touchEndX - touchStartX;
-    const diffY = touchEndY - touchStartY;
-
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-        if (diffX > 0 && direction !== "GAUCHE") {
-            direction = "DROITE";
-        } else if (diffX < 0 && direction !== "DROITE") {
-            direction = "GAUCHE";
-        }
-    } else {
-        if (diffY > 0 && direction !== "HAUT") {
-            direction = "BAS";
-        } else if (diffY < 0 && direction !== "BAS") {
-            direction = "HAUT";
-        }
-    }
-});
-
-// Dessiner un élément
-function drawBox(x, y, color) {
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, box, box);
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(x, y, box, box);
+// Fonction pour générer une position aléatoire pour la nourriture
+function generateFood() {
+    return {
+        x: Math.floor(Math.random() * gridSize),
+        y: Math.floor(Math.random() * gridSize)
+    };
 }
 
-// Dessiner le jeu
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+// Fonction pour démarrer le jeu
+function startGame() {
+    clearInterval(gameInterval); // Arrête un jeu en cours
+    initializeGame();
 
-    // Dessiner le serpent
-    for (let i = 0; i < serpent.length; i++) {
-        drawBox(serpent[i].x, serpent[i].y, i === 0 ? "green" : "lightgreen");
-    }
+    // Lance la boucle principale toutes les 100ms
+    gameInterval = setInterval(gameLoop, 100);
+}
 
-    // Dessiner la pomme
-    ctx.drawImage(pommeImg, pomme.x, pomme.y, box, box);
+// Fonction pour la logique principale du jeu
+function gameLoop() {
+    updateSnake();
+    checkCollisions();
+    drawBoard();
+    drawSnake();
+    drawFood();
+}
 
-    // Position actuelle de la tête
-    let teteX = serpent[0].x;
-    let teteY = serpent[0].y;
+// Fonction pour dessiner le tableau
+function drawBoard() {
+    const board = document.getElementById("board");
+    const ctx = board.getContext("2d");
+    board.width = 400;
+    board.height = 400;
 
-    // Mise à jour de la position de la tête
-    if (direction === "HAUT") teteY -= box;
-    if (direction === "BAS") teteY += box;
-    if (direction === "GAUCHE") teteX -= box;
-    if (direction === "DROITE") teteX += box;
-
-    // Vérifier si le serpent mange la pomme
-    if (teteX === pomme.x && teteY === pomme.y) {
-        score++;
-        mangeSon.play();
-        pomme = {
-            x: Math.floor(Math.random() * (canvas.width / box)) * box,
-            y: Math.floor(Math.random() * (canvas.height / box)) * box,
-        };
-    } else {
-        serpent.pop(); // Retirer la dernière cellule si pas de pomme mangée
-    }
-
-    // Ajouter une nouvelle tête
-    const nouvelleTete = { x: teteX, y: teteY };
-
-    // Vérifier les collisions
-    if (
-        teteX < 0 ||
-        teteY < 0 ||
-        teteX >= canvas.width ||
-        teteY >= canvas.height ||
-        collision(nouvelleTete, serpent)
-    ) {
-        gameOverSon.play();
-        clearInterval(jeu);
-        alert("Game Over! Score: " + score);
-        return;
-    }
-
-    serpent.unshift(nouvelleTete);
-
-    // Afficher le score
     ctx.fillStyle = "black";
-    ctx.font = "20px Arial";
-    ctx.fillText("Score: " + score, 10, canvas.height - 10);
+    ctx.fillRect(0, 0, board.width, board.height);
 }
 
-// Vérifier les collisions avec le corps
-function collision(tete, corps) {
-    for (let i = 0; i < corps.length; i++) {
-        if (tete.x === corps[i].x && tete.y === corps[i].y) {
-            return true;
-        }
+// Fonction pour dessiner le serpent
+function drawSnake() {
+    const board = document.getElementById("board");
+    const ctx = board.getContext("2d");
+
+    ctx.fillStyle = "green";
+    snake.forEach(segment => {
+        ctx.fillRect(segment.x * 20, segment.y * 20, 20, 20);
+    });
+}
+
+// Fonction pour dessiner la nourriture
+function drawFood() {
+    const board = document.getElementById("board");
+    const ctx = board.getContext("2d");
+
+    ctx.fillStyle = "red";
+    ctx.fillRect(food.x * 20, food.y * 20, 20, 20);
+}
+
+// Fonction pour vérifier les collisions
+function checkCollisions() {
+    const head = snake[0];
+
+    // Collision avec les murs ou soi-même
+    if (
+        head.x < 0 || head.y < 0 ||
+        head.x >= gridSize || head.y >= gridSize ||
+        snake.some((segment, index) => index !== 0 && segment.x === head.x && segment.y === head.y)
+    ) {
+        clearInterval(gameInterval); // Arrête le jeu silencieusement
+        console.log("Game Over"); // Affiche un message dans la console
     }
-    return false;
+
+    // Collision avec la nourriture
+    if (head.x === food.x && head.y === food.y) {
+        score += 10;
+        snake.push({}); // Ajoute un segment au serpent
+        food = generateFood(); // Génère une nouvelle nourriture
+    }
 }
 
-// Démarrer le jeu
-let jeu = setInterval(draw, 100);
+// Fonction pour mettre à jour la position du serpent
+function updateSnake() {
+    const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+    snake.unshift(head); // Ajoute une nouvelle tête
+    snake.pop(); // Supprime la queue
+}
+
+// Écouteur d'événements pour les touches directionnelles
+document.addEventListener("keydown", (e) => {
+    switch (e.key) {
+        case "ArrowUp":
+            if (direction.y === 0) direction = { x: 0, y: -1 };
+            break;
+        case "ArrowDown":
+            if (direction.y === 0) direction = { x: 0, y: 1 };
+            break;
+        case "ArrowLeft":
+            if (direction.x === 0) direction = { x: -1, y: 0 };
+            break;
+        case "ArrowRight":
+            if (direction.x === 0) direction = { x: 1, y: 0 };
+            break;
+    }
+});
+
+// Écouteur pour le bouton "Restart Game"
+document.getElementById("restartButton").addEventListener("click", startGame);
+
+// Écouteur pour le bouton "Quit"
+document.getElementById("quitButton").addEventListener("click", () => {
+    window.location.href = "index.html"; // Redirige vers la page d'accueil
+});
+
+// Démarre le jeu au chargement de la page
+startGame();
