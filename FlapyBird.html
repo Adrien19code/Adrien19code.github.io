@@ -1,50 +1,38 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird</title>
+    <title>Accueil</title>
     <style>
-        /* Centrer le jeu */
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
             margin: 0;
-            background-color: #f0f0f0; /* Choisissez une couleur de fond pour la page */
+            padding: 0;
         }
 
-        #zone_de_dessin {
-            display: block;
-            border: 1px solid black;
-        }
-
-        #bouton-quitter {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 10;
-            padding: 10px 15px;
-            background-color: red;
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
+            margin: 10px;
+            width: 80%;
+            max-width: 300px;
         }
 
-        #bouton-quitter:hover {
-            background-color: darkred;
+        button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <!-- Bouton quitter -->
-    <button id="bouton-quitter">Quitter</button>
-    
-    <!-- Zone de jeu -->
-    <canvas id="zone_de_dessin"></canvas>
-
-    <script src="main.js"></script>
+    <button onclick="window.location.href='FlappyBird.html';">Flappy Bird</button>
+    <button onclick="window.location.href='snake.html';">Snake</button>
 </body>
 </html>
