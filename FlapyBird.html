@@ -1,17 +1,18 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird</title>
     <style>
+        /* Centrer le jeu */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f0f0f0; /* Choisissez une couleur de fond pour la page */
         }
 
         #zone_de_dessin {
@@ -38,7 +39,10 @@
     </style>
 </head>
 <body>
+    <!-- Bouton quitter -->
     <button id="bouton-quitter">Quitter</button>
+    
+    <!-- Zone de jeu -->
     <canvas id="zone_de_dessin"></canvas>
 
     <script src="main.js"></script>
