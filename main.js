@@ -201,7 +201,7 @@ function dessine() {
 
     if (finDuJeu) {
         ctx.font = "20px Arial";
-        const messageLigne1 = "Cliquez sur la barre espace";
+        const messageLigne1 = "Cliquez ";
         const messageLigne2 = "pour rejouer";
         const largeurMessage = Math.max(
             ctx.measureText(messageLigne1).width,
