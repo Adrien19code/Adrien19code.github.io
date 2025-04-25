@@ -5,23 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird</title>
     <style>
-        /* Centrer le jeu */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0; /* Choisissez une couleur de fond pour la page */
+            background-color: #f0f0f0;
         }
-
+        body {
+      background-color: #7db9db;
+    }
         #zone_de_dessin {
             display: block;
             border: 1px solid black;
         }
 
         #bouton-quitter {
-            position: absolute;
+            position: fixed; 
             top: 10px;
             left: 10px;
             z-index: 10;
@@ -33,18 +34,17 @@
             cursor: pointer;
         }
 
-        #bouton-quitter:hover {
-            background-color: darkred;
-        }
     </style>
 </head>
 <body>
-    <!-- Bouton quitter -->
-    <button id="bouton-quitter">Quitter</button>
-    
-    <!-- Zone de jeu -->
+    <button id="bouton-quitter" onclick="quitter()">Quitter</button>
     <canvas id="zone_de_dessin"></canvas>
 
-    <script src="main.js"></script>
+    <script src="FlappyBird.js"></script>
+    <script>
+        function quitter() {
+            window.location.href = "index.html"; 
+        }
+    </script>
 </body>
 </html>
