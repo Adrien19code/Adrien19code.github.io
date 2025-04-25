@@ -220,4 +220,6 @@ function dessine() {
 }
 
 // Démarrer le jeu immédiatement
-demarrerJeu();
+demarrerJeu(); 
+
+
