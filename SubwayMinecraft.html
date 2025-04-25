@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subway Minecraft</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            background-color: #f0f0f0;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+        body {
+      background-color: #7db9db;
+    }
+        canvas {
+            border: 2px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        #bouton-quitter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff0000; 
+        }
+
+        #bouton-rejouer {
+            background-color: #28a745; 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .icon-small {
+            width: 200px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="bouton-quitter">Quitter</button>
+    <button id="bouton-rejouer">Rejouer</button>
+
+    <script src="SubwayMinecraft.js"></script>
+</body>
+</html>
