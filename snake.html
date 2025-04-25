@@ -4,12 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake</title>
-    <link rel="stylesheet" href="snake.css">
-    <script src="snake.js" defer></script>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            background-color: #f0f0f0;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+        body {
+      background-color: #7db9db;
+    }
+        canvas {
+            border: 2px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        #quitButton {
+            background-color: #f44336;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        #restartButton {
+            margin-top: 20px;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .controller {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left down right";
+            gap: 10px;
+        }
+
+        .arrow {
+            width: 60px;
+            height: 60px;
+            background-color: rgb(53, 53, 53);
+            color: white;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .up    { grid-area: up; }
+        .down  { grid-area: down; }
+        .left  { grid-area: left; }
+        .right { grid-area: right; }
+
+        .active {
+            background-color: #3498db;
+        }
+    </style>
 </head>
 <body>
     <canvas id="board" width="400" height="400"></canvas>
-    <button id="restartButton">Restart Game</button>
-    <button id="quitButton">Quitter</button> <!-- Nouveau bouton Quitter -->
+    <button id="restartButton">Rejouer</button>
+    <button id="quitButton">Quitter</button> 
+
+    <div class="controller">
+        <div class="arrow up">↑</div>
+        <div class="arrow left">←</div>
+        <div class="arrow down">↓</div>
+        <div class="arrow right">→</div>
+    </div>
+
+    <script src="snake.js" defer></script>
 </body>
 </html>
