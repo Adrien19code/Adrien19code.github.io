@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ordi</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.158.0/build/three.module.js';
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(3, 2, 0); // Plus proche du centre (zoom)
+camera.lookAt(0, 0, 0);
+
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const ambientLight = new THREE.AmbientLight(new THREE.Color(0.25, 0.25, 0.25), 1);
+    scene.add(ambientLight);
+
+    const screenLight = new THREE.PointLight(new THREE.Color(0, 0, 1), 2, 5);
+    screenLight.position.set(-0.7, 1, 0);
+    scene.add(screenLight);
+
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(1, 1, 1) });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    cube.scale.set(1, 0.2, 3.1);
+    cube.position.set(0.5, -1, 0);
+
+    const screenGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const screenMaterial = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(0, 0, 1),
+      emissive: new THREE.Color(0, 0, 1),
+    });
+    const screen = new THREE.Mesh(screenGeometry, screenMaterial);
+    scene.add(screen);
+    screen.scale.set(0.05, 2, 4);
+    screen.position.set(-2, 1, 0);
+    screen.rotation.z = Math.PI / 6;
+
+
+
+
+// TOUCHES DU CLAVIER
+
+// touches 1ere ligne
+
+    // Barre espace
+    const spaceGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const spaceMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 1, 1) });
+    const space = new THREE.Mesh(spaceGeometry, spaceMaterial);
+    scene.add(space);
+    space.scale.set(0.1, 0.2, 1);
+    space.position.set(0.90, -0.89, 0.25);
+
+    let isSpacePressed = false;
+    let spaceOriginalY = space.position.y;
+
+    window.addEventListener('keydown', (event) => {
+      if (event.code === 'Space' && !isSpacePressed) {
+        isSpacePressed = true;
+        space.position.y -= 0.05;
+      }
+    });
+
+    window.addEventListener('keyup', (event) => {
+      if (event.code === 'Space') {
+        isSpacePressed = false;
+        space.position.y = spaceOriginalY;
+      }
+    });
+
+
+// FLECHES
+
+// Création des flèches directionnelles
+const arrowKeys = [
+  { code: 'ArrowLeft', position: [-0.65, -0.89], name: 'arrowLeft' },
+  { code: 'ArrowDown', position: [-0.90, -0.89], name: 'arrowDown' },
+  { code: 'ArrowRight', position: [-1.15, -0.89], name: 'arrowRight' },
+  { code: 'ArrowUp', position: [-0.90, -0.89], name: 'arrowUp', xOffset: -0.15 }
+];
+
+const arrows = {};
+
+arrowKeys.forEach(({ code, position, name, xOffset = 0 }) => {
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 1, 1) });
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+  mesh.scale.set(0.1, 0.2, 0.2);
+  mesh.position.set(0.90 + xOffset, position[1], position[0]);
+
+  const originalY = mesh.position.y;
+  arrows[code] = { mesh, originalY, pressed: false };
+});
+
+window.addEventListener('keydown', (event) => {
+  const arrow = arrows[event.code];
+  if (arrow && !arrow.pressed) {
+    arrow.pressed = true;
+    arrow.mesh.position.y -= 0.05;
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  const arrow = arrows[event.code];
+  if (arrow) {
+    arrow.pressed = false;
+    arrow.mesh.position.y = arrow.originalY;
+  }
+});
+
+
+
+// TOUHES DE CONTROLES
+
+// Touches non fonctionnelles
+const specialPositions = [
+  { x: 0.90, z: -0.40, depth: 0.2, color: [1, 2, 3] },
+  { x: 0.90, z:  1.40, depth: 0.2, color: [1, 2, 3] },
+  { x: 0.90, z:  1.15, depth: 0.2, color: [1, 2, 3] },
+  { x: 0.90, z:  0.90, depth: 0.2, color: [1, 2, 3] },
+  { x: 0.90, z: -1.40, depth: 0.2, color: [1, 2, 3] },
+  { x: 0.75, z:  1.10, depth: 0.1, color: [2, 2, 2] }
+];
+
+specialPositions.forEach(pos => {
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(...pos.color) });
+  const key = new THREE.Mesh(geometry, material);
+  scene.add(key);
+  key.scale.set(0.1, 0.2, pos.depth);
+  key.position.set(pos.x, -0.89, pos.z);
+});
+
+
+
+
+
+// touches 2eme lignes
+
+// TOUCHES DE CONTROLES FONCTIONNELLES
+
+    // Touche Maj (Shift gauche)
+    const shiftLeftGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const shiftLeftMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(1, 2, 3) });
+    const shiftLeft = new THREE.Mesh(shiftLeftGeometry, shiftLeftMaterial);
+    scene.add(shiftLeft);
+    shiftLeft.scale.set(0.1, 0.2, 0.3);
+    shiftLeft.position.set(0.75, -0.89, 1.35); // Ajuste la position si besoin
+
+    let isShiftLeftPressed = false;
+    let shiftLeftOriginalY = shiftLeft.position.y;
+
+    window.addEventListener('keydown', (event) => {
+    if (event.code === 'ShiftLeft' && !isShiftLeftPressed) {
+    isShiftLeftPressed = true;
+    shiftLeft.position.y -= 0.05;
+    }
+    });
+
+    window.addEventListener('keyup', (event) => {
+    if (event.code === 'ShiftLeft') {
+    isShiftLeftPressed = false;
+    shiftLeft.position.y = shiftLeftOriginalY;
+    }
+    });
+
+
+// Touche Maj droite
+const shiftRightGeometry = new THREE.BoxGeometry(1, 1, 1);
+const shiftRightMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(1, 2, 3) });
+const shiftRight = new THREE.Mesh(shiftRightGeometry, shiftRightMaterial);
+scene.add(shiftRight);
+shiftRight.scale.set(0.1, 0.2, 0.45);
+shiftRight.position.set(0.75, -0.89, -1.28); // Ajuste la position si besoin
+
+let isShiftRightPressed = false;
+let shiftRightOriginalY = shiftRight.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.code === 'ShiftRight' && !isShiftRightPressed) {
+    isShiftRightPressed = true;
+    shiftRight.position.y -= 0.05;
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.code === 'ShiftRight') {
+    isShiftRightPressed = false;
+    shiftRight.position.y = shiftRightOriginalY;
+  }
+});
+
+
+// Touche "W"
+const wGeometry = new THREE.BoxGeometry(1, 1, 1);
+const wMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 2, 2) }); // Couleur de la touche A
+const wKey = new THREE.Mesh(wGeometry, wMaterial);
+scene.add(wKey);
+wKey.scale.set(0.1, 0.2, 0.1); // Taille de la touche
+wKey.position.set(0.75, -0.89, 0.95); // Position de la touche A
+
+let isWPressed = false;
+let wOriginalY = wKey.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'w' && !isWPressed) {  // Utilise `event.key` au lieu de `event.code`
+    isWPressed = true;
+    wKey.position.y -= 0.05; // Déplacer la touche vers le bas lorsqu'elle est enfoncée
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.key === 'w') {  // Utilise `event.key` ici aussi
+    isWPressed = false;
+    wKey.position.y = wOriginalY; // Remettre la touche à sa position d'origine lorsqu'elle est relâchée
+  }
+});
+
+// Touche "x"
+const xGeometry = new THREE.BoxGeometry(1, 1, 1);
+const xMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 2, 2) }); // Couleur de la touche A
+const xKey = new THREE.Mesh(xGeometry, xMaterial);
+scene.add(xKey);
+xKey.scale.set(0.1, 0.2, 0.1); // Taille de la touche
+xKey.position.set(0.75, -0.89, 0.80); // Position de la touche A
+
+let isXPressed = false;
+let xOriginalY = xKey.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'x' && !isXPressed) {  // Utilise `event.key` au lieu de `event.code`
+    isXPressed = true;
+    xKey.position.y -= 0.05; // Déplacer la touche vers le bas lorsqu'elle est enfoncée
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.key === 'x') {  // Utilise `event.key` ici aussi
+    isXPressed = false;
+    xKey.position.y = xOriginalY; // Remettre la touche à sa position d'origine lorsqu'elle est relâchée
+  }
+});
+
+// Touche "C"
+const cGeometry = new THREE.BoxGeometry(1, 1, 1);
+const cMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 2, 2) }); // Couleur de la touche A
+const cKey = new THREE.Mesh(cGeometry, cMaterial);
+scene.add(cKey);
+cKey.scale.set(0.1, 0.2, 0.1); // Taille de la touche
+cKey.position.set(0.75, -0.89, 0.65); // Position de la touche A
+
+let isCPressed = false;
+let cOriginalY = cKey.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'c' && !isCPressed) {  // Utilise `event.key` au lieu de `event.code`
+    isCPressed = true;
+    cKey.position.y -= 0.05; // Déplacer la touche vers le bas lorsqu'elle est enfoncée
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.key === 'c') {  // Utilise `event.key` ici aussi
+    isCPressed = false;
+    cKey.position.y = cOriginalY; // Remettre la touche à sa position d'origine lorsqu'elle est relâchée
+  }
+});
+
+// Touche "V"
+const vGeometry = new THREE.BoxGeometry(1, 1, 1);
+const vMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 2, 2) }); // Couleur de la touche A
+const vKey = new THREE.Mesh(vGeometry, vMaterial);
+scene.add(vKey);
+vKey.scale.set(0.1, 0.2, 0.1); // Taille de la touche
+vKey.position.set(0.75, -0.89, 0.50); // Position de la touche A
+
+let isVPressed = false;
+let vOriginalY = vKey.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'v' && !isVPressed) {  // Utilise `event.key` au lieu de `event.code`
+    isVPressed = true;
+    vKey.position.y -= 0.05; // Déplacer la touche vers le bas lorsqu'elle est enfoncée
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.key === 'v') {  // Utilise `event.key` ici aussi
+    isVPressed = false;
+    vKey.position.y = vOriginalY; // Remettre la touche à sa position d'origine lorsqu'elle est relâchée
+  }
+});
+
+// Touche "B"
+const bGeometry = new THREE.BoxGeometry(1, 1, 1);
+const bMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 2, 2) }); // Couleur de la touche A
+const bKey = new THREE.Mesh(bGeometry, bMaterial);
+scene.add(bKey);
+bKey.scale.set(0.1, 0.2, 0.1); // Taille de la touche
+bKey.position.set(0.75, -0.89, 0.35); // Position de la touche A
+
+let isBPressed = false;
+let bOriginalY = bKey.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'b' && !isBPressed) {  // Utilise `event.key` au lieu de `event.code`
+    isBPressed = true;
+    bKey.position.y -= 0.05; // Déplacer la touche vers le bas lorsqu'elle est enfoncée
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.key === 'b') {  // Utilise `event.key` ici aussi
+    isBPressed = false;
+    bKey.position.y = bOriginalY; // Remettre la touche à sa position d'origine lorsqu'elle est relâchée
+  }
+});
+
+// Touche "B"
+const nGeometry = new THREE.BoxGeometry(1, 1, 1);
+const nMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 2, 2) }); // Couleur de la touche A
+const nKey = new THREE.Mesh(nGeometry, nMaterial);
+scene.add(nKey);
+nKey.scale.set(0.1, 0.2, 0.1); // Taille de la touche
+nKey.position.set(0.75, -0.89, 0.20); // Position de la touche A
+
+let isNPressed = false;
+let nOriginalY = nKey.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'n' && !isNPressed) {  // Utilise `event.key` au lieu de `event.code`
+    isNPressed = true;
+    nKey.position.y -= 0.05; // Déplacer la touche vers le bas lorsqu'elle est enfoncée
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.key === 'n') {  // Utilise `event.key` ici aussi
+    isNPressed = false;
+    nKey.position.y = nOriginalY; // Remettre la touche à sa position d'origine lorsqu'elle est relâchée
+  }
+});
+
+// Touches non fonctionnelles
+const positions = [0.05, -0.10, -0.25, -0.40, -0.55, -0.70];
+
+positions.forEach((zPos) => {
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 2, 2) });
+  const key = new THREE.Mesh(geometry, material);
+  scene.add(key);
+  key.scale.set(0.1, 0.2, 0.1);
+  key.position.set(0.75, -0.89, zPos);
+});
+
+
+
+
+
+
+
+
+
+
+// touche 3 eme lignes
+
+
+// touche entrée
+
+// Touche Entrée 1
+const enterGeometry1 = new THREE.BoxGeometry(1, 1, 1);
+const enterMaterial1 = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 1, 1) });
+const enterKey1 = new THREE.Mesh(enterGeometry1, enterMaterial1);
+scene.add(enterKey1);
+enterKey1.scale.set(0.25, 0.2, 0.2);
+enterKey1.position.set(0.50, -0.89, -1.40);
+
+// Touche Entrée 2
+const enterGeometry2 = new THREE.BoxGeometry(1, 1, 1);
+const enterMaterial2 = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 1, 1) });
+const enterKey2 = new THREE.Mesh(enterGeometry2, enterMaterial2);
+scene.add(enterKey2);
+enterKey2.scale.set(0.1, 0.2, 0.3);
+enterKey2.position.set(0.40, -0.89, -1.35);
+
+let isEnterPressed = false;
+let enterOriginalY1 = enterKey1.position.y;
+let enterOriginalY2 = enterKey2.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.code === 'Enter' && !isEnterPressed) {
+    isEnterPressed = true;
+    enterKey1.position.y -= 0.05;
+    enterKey2.position.y -= 0.05;
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.code === 'Enter') {
+    isEnterPressed = false;
+    enterKey1.position.y = enterOriginalY1;
+    enterKey2.position.y = enterOriginalY2;
+  }
+});
+
+// Touche Backspace
+const backspaceGeometry = new THREE.BoxGeometry(1, 1, 1);
+const backspaceMaterial = new THREE.MeshStandardMaterial({ color: new THREE.Color(2, 1, 1) }); // Couleur jaune
+const backspaceKey = new THREE.Mesh(backspaceGeometry, backspaceMaterial);
+scene.add(backspaceKey);
+backspaceKey.scale.set(0.1, 0.2, 0.3); // Taille un peu plus large
+backspaceKey.position.set(0.25, -0.89, -1.35); // Position proche de Entrée (à ajuster si nécessaire)
+
+let isBackspacePressed = false;
+let backspaceOriginalY = backspaceKey.position.y;
+
+window.addEventListener('keydown', (event) => {
+  if (event.code === 'Backspace' && !isBackspacePressed) {
+    isBackspacePressed = true;
+    backspaceKey.position.y -= 0.05;
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.code === 'Backspace') {
+    isBackspacePressed = false;
+    backspaceKey.position.y = backspaceOriginalY;
+  }
+});
+
+
+
+
+
+
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>
