@@ -223,3 +223,5 @@ function dessine() {
 demarrerJeu(); 
 
 
+
+
