@@ -11,16 +11,14 @@
             background-color: #f0f0f0;
             height: 100vh;
             margin: 0;
-            overflow: hidden; 
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             position: relative;
         }
-        body {
-      background-color: #7db9db;
-    }
+
         canvas {
             border: 2px solid black;
             display: block;
@@ -36,6 +34,10 @@
             border: none;
             border-radius: 5px;
             margin: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
         }
 
         #quitButton {
@@ -91,13 +93,12 @@
     <button id="quitButton">Quitter</button> 
 
     <div class="controller">
-        <div class="arrow up">↑</div>
-        <div class="arrow left">←</div>
-        <div class="arrow down">↓</div>
-        <div class="arrow right">→</div>
+        <div class="arrow up" data-direction="ArrowUp">↑</div>
+        <div class="arrow left" data-direction="ArrowLeft">←</div>
+        <div class="arrow down" data-direction="ArrowDown">↓</div>
+        <div class="arrow right" data-direction="ArrowRight">→</div>
     </div>
 
     <script src="snake.js" defer></script>
 </body>
 </html>
-
