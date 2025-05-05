@@ -162,3 +162,50 @@ arrowButtons.forEach(button => {
         button.classList.remove('active');
     });
 });
+
+// Function that changes direction like a key press
+function changeDirectionFromKey(key) {
+    switch (key) {
+        case "ArrowUp":
+            if (direction.y === 0) direction = { x: 0, y: -1 };
+            break;
+        case "ArrowDown":
+            if (direction.y === 0) direction = { x: 0, y: 1 };
+            break;
+        case "ArrowLeft":
+            if (direction.x === 0) direction = { x: -1, y: 0 };
+            break;
+        case "ArrowRight":
+            if (direction.x === 0) direction = { x: 1, y: 0 };
+            break;
+    }
+}
+
+// Add event listeners for mobile arrow buttons
+arrowButtons.forEach(button => {
+    const key = button.dataset.direction;
+
+    button.addEventListener('touchstart', () => {
+        button.classList.add('active');
+        changeDirectionFromKey(key);
+    });
+
+    button.addEventListener('mousedown', () => {
+        button.classList.add('active');
+        changeDirectionFromKey(key);
+    });
+
+    button.addEventListener('touchend', () => {
+        button.classList.remove('active');
+    });
+
+    button.addEventListener('mouseup', () => {
+        button.classList.remove('active');
+    });
+
+    button.addEventListener('touchcancel', () => {
+        button.classList.remove('active');
+    });
+});
+
+
