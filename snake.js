@@ -3,6 +3,7 @@ let snake, food, score, direction;
 
 const gridSize = 20;
 
+// Initialize the game
 function initializeGame() {
     snake = [{ x: 5, y: 5 }];
     food = generateFood();
@@ -15,6 +16,7 @@ function initializeGame() {
     document.getElementById("restartButton").style.display = "none";
 }
 
+// Generate a new food position
 function generateFood() {
     return {
         x: Math.floor(Math.random() * gridSize),
@@ -22,12 +24,14 @@ function generateFood() {
     };
 }
 
+// Start the game loop
 function startGame() {
     clearInterval(gameInterval);
     initializeGame();
-    gameInterval = setInterval(gameLoop, 200); // Ralentir la vitesse ici
+    gameInterval = setInterval(gameLoop, 200); // Speed of the game
 }
 
+// Main game loop
 function gameLoop() {
     updateSnake();
     checkCollisions();
@@ -36,6 +40,7 @@ function gameLoop() {
     drawFood();
 }
 
+// Draw the board (black background)
 function drawBoard() {
     const board = document.getElementById("board");
     const ctx = board.getContext("2d");
@@ -46,6 +51,7 @@ function drawBoard() {
     ctx.fillRect(0, 0, board.width, board.height);
 }
 
+// Draw the snake
 function drawSnake() {
     const board = document.getElementById("board");
     const ctx = board.getContext("2d");
@@ -56,6 +62,7 @@ function drawSnake() {
     });
 }
 
+// Draw the food
 function drawFood() {
     const board = document.getElementById("board");
     const ctx = board.getContext("2d");
@@ -64,6 +71,7 @@ function drawFood() {
     ctx.fillRect(food.x * 20, food.y * 20, 20, 20);
 }
 
+// Check collisions (walls, self, food)
 function checkCollisions() {
     const head = snake[0];
 
@@ -74,47 +82,51 @@ function checkCollisions() {
     ) {
         clearInterval(gameInterval);
         console.log("Game Over");
-
         document.getElementById("restartButton").style.display = "block";
     }
 
     if (head.x === food.x && head.y === food.y) {
         score += 10;
-        snake.push({});
+        snake.push({}); // Grow the snake
         food = generateFood();
     }
 }
 
+// Update the snake position
 function updateSnake() {
     const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
     snake.unshift(head);
     snake.pop();
 }
 
-document.addEventListener("keydown", (e) => {
-    switch (e.key) {
-        case "ArrowUp":
-            if (direction.y === 0) direction = { x: 0, y: -1 };
-            break;
-        case "ArrowDown":
-            if (direction.y === 0) direction = { x: 0, y: 1 };
-            break;
-        case "ArrowLeft":
-            if (direction.x === 0) direction = { x: -1, y: 0 };
-            break;
-        case "ArrowRight":
-            if (direction.x === 0) direction = { x: 1, y: 0 };
-            break;
+// Change direction safely (keyboard or touch)
+function changeDirectionFromKey(key) {
+    if (key === "ArrowUp" && direction.y === 0) {
+        direction = { x: 0, y: -1 };
+    } else if (key === "ArrowDown" && direction.y === 0) {
+        direction = { x: 0, y: 1 };
+    } else if (key === "ArrowLeft" && direction.x === 0) {
+        direction = { x: -1, y: 0 };
+    } else if (key === "ArrowRight" && direction.x === 0) {
+        direction = { x: 1, y: 0 };
     }
+}
+
+// Keyboard input
+document.addEventListener("keydown", (e) => {
+    changeDirectionFromKey(e.key);
 });
 
+// Restart and quit buttons
 document.getElementById("restartButton").addEventListener("click", startGame);
 document.getElementById("quitButton").addEventListener("click", () => {
     window.location.href = "index.html";
 });
 
+// Start game on load
 startGame();
 
+// Highlight arrows on key press (desktop)
 const arrows = {
     ArrowUp: document.querySelector('.up'),
     ArrowDown: document.querySelector('.down'),
@@ -134,78 +146,28 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
-// Select all arrow buttons
+// Handle touch and mouse clicks on arrow buttons (mobile)
 const arrowButtons = document.querySelectorAll('.arrow');
 
-// Add touch and mouse events for mobile users
-arrowButtons.forEach(button => {
-    // Highlight on touchstart or mousedown
-    button.addEventListener('touchstart', () => {
-        button.classList.add('active');
-    });
-
-    button.addEventListener('mousedown', () => {
-        button.classList.add('active');
-    });
-
-    // Remove highlight on touchend or mouseup
-    button.addEventListener('touchend', () => {
-        button.classList.remove('active');
-    });
-
-    button.addEventListener('mouseup', () => {
-        button.classList.remove('active');
-    });
-
-    // Optionnel : retirer la classe si le doigt glisse en dehors
-    button.addEventListener('touchcancel', () => {
-        button.classList.remove('active');
-    });
-});
-
-// Function that changes direction like a key press
-function changeDirectionFromKey(key) {
-    switch (key) {
-        case "ArrowUp":
-            if (direction.y === 0) direction = { x: 0, y: -1 };
-            break;
-        case "ArrowDown":
-            if (direction.y === 0) direction = { x: 0, y: 1 };
-            break;
-        case "ArrowLeft":
-            if (direction.x === 0) direction = { x: -1, y: 0 };
-            break;
-        case "ArrowRight":
-            if (direction.x === 0) direction = { x: 1, y: 0 };
-            break;
-    }
-}
-
-// Add event listeners for mobile arrow buttons
 arrowButtons.forEach(button => {
     const key = button.dataset.direction;
 
-    button.addEventListener('touchstart', () => {
+    const handlePress = () => {
         button.classList.add('active');
         changeDirectionFromKey(key);
-    });
+    };
 
-    button.addEventListener('mousedown', () => {
-        button.classList.add('active');
-        changeDirectionFromKey(key);
-    });
-
-    button.addEventListener('touchend', () => {
+    const handleRelease = () => {
         button.classList.remove('active');
-    });
+    };
 
-    button.addEventListener('mouseup', () => {
-        button.classList.remove('active');
-    });
+    button.addEventListener('touchstart', handlePress);
+    button.addEventListener('mousedown', handlePress);
 
-    button.addEventListener('touchcancel', () => {
-        button.classList.remove('active');
-    });
+    button.addEventListener('touchend', handleRelease);
+    button.addEventListener('mouseup', handleRelease);
+    button.addEventListener('touchcancel', handleRelease);
 });
+
 
 
