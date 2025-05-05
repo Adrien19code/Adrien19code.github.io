@@ -25,7 +25,7 @@ function generateFood() {
 function startGame() {
     clearInterval(gameInterval);
     initializeGame();
-    gameInterval = setInterval(gameLoop, 100);
+    gameInterval = setInterval(gameLoop, 200); // Ralentir la vitesse ici
 }
 
 function gameLoop() {
@@ -132,4 +132,33 @@ document.addEventListener('keyup', (e) => {
     if (arrows[e.key]) {
         arrows[e.key].classList.remove('active');
     }
+});
+
+// Select all arrow buttons
+const arrowButtons = document.querySelectorAll('.arrow');
+
+// Add touch and mouse events for mobile users
+arrowButtons.forEach(button => {
+    // Highlight on touchstart or mousedown
+    button.addEventListener('touchstart', () => {
+        button.classList.add('active');
+    });
+
+    button.addEventListener('mousedown', () => {
+        button.classList.add('active');
+    });
+
+    // Remove highlight on touchend or mouseup
+    button.addEventListener('touchend', () => {
+        button.classList.remove('active');
+    });
+
+    button.addEventListener('mouseup', () => {
+        button.classList.remove('active');
+    });
+
+    // Optionnel : retirer la classe si le doigt glisse en dehors
+    button.addEventListener('touchcancel', () => {
+        button.classList.remove('active');
+    });
 });
