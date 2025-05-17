@@ -1,68 +1,164 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Adrien19code</title>
-
-  <link rel="icon" href="icones/logo.png"> 
+  <link rel="icon" href="icones/logo.png" />
   <style>
     body {
       background-color: #7db9db;
       text-align: center;
+      font-family: Arial, sans-serif;
     }
     
     h1 {
       font-size: 50px;
       color: #000000;
       margin-top: 50px;
+      margin-bottom: 30px;
     }
-
-    button {
+    
+    .tabs {
+      max-width: 700px;
+      margin: auto;
+    }
+    
+    .tab-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .tab-button {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      background: #e0e0e0;
+      border-radius: 5px;
+      font-size: 18px;
+      transition: background 0.3s;
+    }
+    
+    .tab-button:hover {
+      background: #82aec7;
+    }
+    
+    .tab-button.active {
+      background: #12a1f4;
+      color: #000;
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    button.game-btn {
       padding: 10px 15px;
       font-size: 30px;
       background-color: #12a1f4;
-      margin: 30px;
+      margin: 15px 30px;
       border-radius: 20px;
       border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: background-color 0.3s, transform 0.3s;
     }
-
-    button img {
+    
+    button.game-btn img {
       height: 100px;
       margin-right: 50px;
       border-radius: 10px;
-    } 
-
-    button:hover {
-      background-color: #00aeff;
+      user-select: none;
     }
-
+    
+    button.game-btn:hover {
+      background-color: #00aeff;
+      transform: scale(1.15);
+    }
   </style>
 </head>
 <body>
 
   <h1>{Adrien19code}</h1>
 
-  <button onclick="window.location.href='FlappyBird.html';">  
-    <img src="icones/oiseau.png">
-    Flappy Bird
-  </button>
+  <div class="tabs">
+    <div class="tab-buttons">
+      <button class="tab-button active" data-tab="tab1">Accueil</button>
+      <button class="tab-button" data-tab="tab2">html/css/js</button>
+      <button class="tab-button" data-tab="tab3">three.js</button>
+    </div>
 
-  <button onclick="window.location.href='snake.html';">
-    <img src="icones/snake.jpg" >
-    Snake
-  </button>
+    <div class="tab-content active" id="tab1">
+      <!-- Tous les boutons -->
+      <button class="game-btn" onclick="window.location.href='FlappyBird.html';">
+        <img src="icones/oiseau.png" alt="Flappy Bird" />
+        Flappy Bird
+      </button>
+      <button class="game-btn" onclick="window.location.href='snake.html';">
+        <img src="icones/snake.jpg" alt="Snake" />
+        Snake
+      </button>
+      <button class="game-btn" onclick="window.location.href='SubwayMinecraft.html';">
+        <img src="icones/subwayminecraft.png" alt="Subway Minecraft" />
+        Subway Minecraft
+      </button>
+      <button class="game-btn" onclick="window.location.href='ordi.html';">
+        <img src="icones/ordi.png" alt="keyboard" />
+        keyboard
+      </button>
+    </div>
 
-  <button onclick="window.location.href='SubwayMinecraft.html';">
-    <img src="icones/subwayminecraft.png" >
-    Subway Minecraft
-  </button>
-  <button onclick="window.location.href='ordi.html';">
-    <img src="icones/ordi.png" >
-    keyboard
-  </button>
+    <div class="tab-content" id="tab2">
+      <!-- Flappy Bird et Snake uniquement -->
+      <button class="game-btn" onclick="window.location.href='FlappyBird.html';">
+        <img src="icones/oiseau.png" alt="Flappy Bird" />
+        Flappy Bird
+      </button>
+      <button class="game-btn" onclick="window.location.href='snake.html';">
+        <img src="icones/snake.jpg" alt="Snake" />
+        Snake
+      </button>
+    </div>
 
+    <div class="tab-content" id="tab3">
+      <!-- Subway Minecraft et keyboard uniquement -->
+      <button class="game-btn" onclick="window.location.href='SubwayMinecraft.html';">
+        <img src="icones/subwayminecraft.png" alt="Subway Minecraft" />
+        Subway Minecraft
+      </button>
+      <button class="game-btn" onclick="window.location.href='ordi.html';">
+        <img src="icones/ordi.png" alt="keyboard" />
+        keyboard
+      </button>
+    </div>
+  </div>
 
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+
+        // Supprimer les classes actives
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Activer l'onglet cliqué
+        button.classList.add('active');
+        document.getElementById(targetTab).classList.add('active');
+      });
+    });
+  </script>
 
 </body>
 </html>
