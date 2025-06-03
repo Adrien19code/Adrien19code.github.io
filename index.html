@@ -97,7 +97,6 @@
     </div>
 
     <div class="tab-content active" id="tab1">
-      <!-- Tous les boutons -->
       <button class="game-btn" onclick="window.location.href='FlappyBird.html';">
         <img src="icones/oiseau.png" alt="Flappy Bird" />
         Flappy Bird
@@ -114,10 +113,13 @@
         <img src="icones/ordi.png" alt="keyboard" />
         keyboard
       </button>
+            <button class="game-btn" onclick="window.location.href='harvest.html';">
+        <img src="icones/harvest.png" alt="harvets" />
+        Harvets Simulator
+      </button>
     </div>
 
     <div class="tab-content" id="tab2">
-      <!-- Flappy Bird et Snake uniquement -->
       <button class="game-btn" onclick="window.location.href='FlappyBird.html';">
         <img src="icones/oiseau.png" alt="Flappy Bird" />
         Flappy Bird
@@ -129,7 +131,6 @@
     </div>
 
     <div class="tab-content" id="tab3">
-      <!-- Subway Minecraft et keyboard uniquement -->
       <button class="game-btn" onclick="window.location.href='SubwayMinecraft.html';">
         <img src="icones/subwayminecraft.png" alt="Subway Minecraft" />
         Subway Minecraft
@@ -137,6 +138,10 @@
       <button class="game-btn" onclick="window.location.href='ordi.html';">
         <img src="icones/ordi.png" alt="keyboard" />
         keyboard
+      </button>
+            <button class="game-btn" onclick="window.location.href='harvest.html';">
+        <img src="icones/harvest.png" alt="harvest" />
+        Sarvest Simulator
       </button>
     </div>
   </div>
@@ -149,11 +154,9 @@
       button.addEventListener('click', () => {
         const targetTab = button.getAttribute('data-tab');
 
-        // Supprimer les classes actives
         tabButtons.forEach(btn => btn.classList.remove('active'));
         tabContents.forEach(content => content.classList.remove('active'));
 
-        // Activer l'onglet cliqué
         button.classList.add('active');
         document.getElementById(targetTab).classList.add('active');
       });
@@ -162,3 +165,4 @@
 
 </body>
 </html>
+
